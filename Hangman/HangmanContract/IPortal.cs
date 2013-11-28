@@ -8,7 +8,7 @@ using System.ServiceModel;
 namespace HangmanContract
 {
     [ServiceContract(Namespace = "HangmanContract")]
-    interface IPortal
+    public interface IPortal
     {
         [OperationContract]
         bool login(string username, string password);

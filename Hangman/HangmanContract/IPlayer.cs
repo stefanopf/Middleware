@@ -8,7 +8,7 @@ using System.ServiceModel;
 namespace HangmanContract
 {
     [ServiceContract(Namespace = "HangmanContract")]
-    interface IPlayer
+    public interface IPlayer
     {
 
 

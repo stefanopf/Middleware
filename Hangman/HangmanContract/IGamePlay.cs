@@ -8,7 +8,7 @@ using System.ServiceModel;
 namespace HangmanContract
 {
     [ServiceContract(Namespace = "HangmanContract")]
-    interface IGamePlay
+    public interface IGamePlay
     {
         [OperationContract]
         void chooseGameWord(string gameWord, string username);
