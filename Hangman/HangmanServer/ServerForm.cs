@@ -42,8 +42,6 @@ namespace HangmanServer
                 button1.Text = "Turn off Server";
             }
             serverIsOn = !serverIsOn;
-
-
         }
     }
 }

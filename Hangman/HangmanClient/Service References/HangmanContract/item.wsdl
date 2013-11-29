@@ -7,108 +7,116 @@
       <xsd:import schemaLocation="http://localhost:8733/?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IPortal_login_InputMessage">
+  <wsdl:message name="IHangman_login_InputMessage">
     <wsdl:part name="parameters" element="tns:login" />
   </wsdl:message>
-  <wsdl:message name="IPortal_login_OutputMessage">
+  <wsdl:message name="IHangman_login_OutputMessage">
     <wsdl:part name="parameters" element="tns:loginResponse" />
   </wsdl:message>
-  <wsdl:message name="IPortal_register_InputMessage">
+  <wsdl:message name="IHangman_register_InputMessage">
     <wsdl:part name="parameters" element="tns:register" />
   </wsdl:message>
-  <wsdl:message name="IPortal_register_OutputMessage">
+  <wsdl:message name="IHangman_register_OutputMessage">
     <wsdl:part name="parameters" element="tns:registerResponse" />
   </wsdl:message>
-  <wsdl:message name="IPortal_invitePlayers_InputMessage">
+  <wsdl:message name="IHangman_invitePlayers_InputMessage">
     <wsdl:part name="parameters" element="tns:invitePlayers" />
   </wsdl:message>
-  <wsdl:message name="IPortal_invitePlayers_OutputMessage">
-    <wsdl:part name="parameters" element="tns:invitePlayersResponse" />
-  </wsdl:message>
-  <wsdl:message name="IPortal_acceptInvitation_InputMessage">
+  <wsdl:message name="IHangman_acceptInvitation_InputMessage">
     <wsdl:part name="parameters" element="tns:acceptInvitation" />
   </wsdl:message>
-  <wsdl:message name="IPortal_acceptInvitation_OutputMessage">
-    <wsdl:part name="parameters" element="tns:acceptInvitationResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_chooseGameWord_InputMessage">
+  <wsdl:message name="IHangman_chooseGameWord_InputMessage">
     <wsdl:part name="parameters" element="tns:chooseGameWord" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_chooseGameWord_OutputMessage">
-    <wsdl:part name="parameters" element="tns:chooseGameWordResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_guessLetter_InputMessage">
+  <wsdl:message name="IHangman_guessLetter_InputMessage">
     <wsdl:part name="parameters" element="tns:guessLetter" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_guessLetter_OutputMessage">
-    <wsdl:part name="parameters" element="tns:guessLetterResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_guessWord_InputMessage">
+  <wsdl:message name="IHangman_guessWord_InputMessage">
     <wsdl:part name="parameters" element="tns:guessWord" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_guessWord_OutputMessage">
-    <wsdl:part name="parameters" element="tns:guessWordResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_timeUp_InputMessage">
+  <wsdl:message name="IHangman_timeUp_InputMessage">
     <wsdl:part name="parameters" element="tns:timeUp" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_timeUp_OutputMessage">
-    <wsdl:part name="parameters" element="tns:timeUpResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_chat_InputMessage">
+  <wsdl:message name="IHangman_chat_InputMessage">
     <wsdl:part name="parameters" element="tns:chat" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_chat_OutputMessage">
-    <wsdl:part name="parameters" element="tns:chatResponse" />
-  </wsdl:message>
-  <wsdl:message name="IGamePlay_leaveGame_InputMessage">
+  <wsdl:message name="IHangman_leaveGame_InputMessage">
     <wsdl:part name="parameters" element="tns:leaveGame" />
   </wsdl:message>
-  <wsdl:message name="IGamePlay_leaveGame_OutputMessage">
-    <wsdl:part name="parameters" element="tns:leaveGameResponse" />
+  <wsdl:message name="IHangman_startNewGame_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:startNewGame" />
   </wsdl:message>
-  <wsdl:portType name="IPortal">
+  <wsdl:message name="IHangman_setWordLength_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:setWordLength" />
+  </wsdl:message>
+  <wsdl:message name="IHangman_updatePlayersList_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:updatePlayersList" />
+  </wsdl:message>
+  <wsdl:message name="IHangman_getResult_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:getResult" />
+  </wsdl:message>
+  <wsdl:message name="IHangman_endGame_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:endGame" />
+  </wsdl:message>
+  <wsdl:message name="IHangman_receiveMessage_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:receiveMessage" />
+  </wsdl:message>
+  <wsdl:message name="IHangman_receiveInvitation_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:receiveInvitation" />
+  </wsdl:message>
+  <wsdl:portType name="IHangman">
     <wsdl:operation name="login">
-      <wsdl:input wsaw:Action="HangmanContract/IPortal/login" message="tns:IPortal_login_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IPortal/loginResponse" message="tns:IPortal_login_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/login" message="tns:IHangman_login_InputMessage" />
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/loginResponse" message="tns:IHangman_login_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="register">
-      <wsdl:input wsaw:Action="HangmanContract/IPortal/register" message="tns:IPortal_register_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IPortal/registerResponse" message="tns:IPortal_register_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/register" message="tns:IHangman_register_InputMessage" />
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/registerResponse" message="tns:IHangman_register_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="invitePlayers">
-      <wsdl:input wsaw:Action="HangmanContract/IPortal/invitePlayers" message="tns:IPortal_invitePlayers_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IPortal/invitePlayersResponse" message="tns:IPortal_invitePlayers_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/invitePlayers" message="tns:IHangman_invitePlayers_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="acceptInvitation">
-      <wsdl:input wsaw:Action="HangmanContract/IPortal/acceptInvitation" message="tns:IPortal_acceptInvitation_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IPortal/acceptInvitationResponse" message="tns:IPortal_acceptInvitation_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/acceptInvitation" message="tns:IHangman_acceptInvitation_InputMessage" />
     </wsdl:operation>
-  </wsdl:portType>
-  <wsdl:portType name="IGamePlay">
     <wsdl:operation name="chooseGameWord">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/chooseGameWord" message="tns:IGamePlay_chooseGameWord_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/chooseGameWordResponse" message="tns:IGamePlay_chooseGameWord_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/chooseGameWord" message="tns:IHangman_chooseGameWord_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="guessLetter">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/guessLetter" message="tns:IGamePlay_guessLetter_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/guessLetterResponse" message="tns:IGamePlay_guessLetter_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/guessLetter" message="tns:IHangman_guessLetter_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="guessWord">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/guessWord" message="tns:IGamePlay_guessWord_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/guessWordResponse" message="tns:IGamePlay_guessWord_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/guessWord" message="tns:IHangman_guessWord_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="timeUp">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/timeUp" message="tns:IGamePlay_timeUp_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/timeUpResponse" message="tns:IGamePlay_timeUp_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/timeUp" message="tns:IHangman_timeUp_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="chat">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/chat" message="tns:IGamePlay_chat_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/chatResponse" message="tns:IGamePlay_chat_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/chat" message="tns:IHangman_chat_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="leaveGame">
-      <wsdl:input wsaw:Action="HangmanContract/IGamePlay/leaveGame" message="tns:IGamePlay_leaveGame_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IGamePlay/leaveGameResponse" message="tns:IGamePlay_leaveGame_OutputMessage" />
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/leaveGame" message="tns:IHangman_leaveGame_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="startNewGame">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/startNewGame" message="tns:IHangman_startNewGame_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="setWordLength">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/setWordLength" message="tns:IHangman_setWordLength_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="updatePlayersList">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/updatePlayersList" message="tns:IHangman_updatePlayersList_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getResult">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/getResult" message="tns:IHangman_getResult_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="endGame">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/endGame" message="tns:IHangman_endGame_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="receiveMessage">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/receiveMessage" message="tns:IHangman_receiveMessage_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="receiveInvitation">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/receiveInvitation" message="tns:IHangman_receiveInvitation_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

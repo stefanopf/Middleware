@@ -12,59 +12,121 @@ namespace HangmanClient.HangmanContract {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="HangmanContract", ConfigurationName="HangmanContract.IPortal")]
-    public interface IPortal {
+    [System.ServiceModel.ServiceContractAttribute(Namespace="HangmanContract", ConfigurationName="HangmanContract.IHangman", CallbackContract=typeof(HangmanContract.IHangmanCallback))]
+    public interface IHangman {
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/login", ReplyAction="HangmanContract/IPortal/loginResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/login", ReplyAction="HangmanContract/IHangman/loginResponse")]
         bool login(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/login", ReplyAction="HangmanContract/IPortal/loginResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/login", ReplyAction="HangmanContract/IHangman/loginResponse")]
         System.Threading.Tasks.Task<bool> loginAsync(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/register", ReplyAction="HangmanContract/IPortal/registerResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/register", ReplyAction="HangmanContract/IHangman/registerResponse")]
         bool register(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/register", ReplyAction="HangmanContract/IPortal/registerResponse")]
+        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/register", ReplyAction="HangmanContract/IHangman/registerResponse")]
         System.Threading.Tasks.Task<bool> registerAsync(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/invitePlayers", ReplyAction="HangmanContract/IPortal/invitePlayersResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/invitePlayers")]
         void invitePlayers(string[] invitedPlayerNames, string username);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/invitePlayers", ReplyAction="HangmanContract/IPortal/invitePlayersResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/invitePlayers")]
         System.Threading.Tasks.Task invitePlayersAsync(string[] invitedPlayerNames, string username);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/acceptInvitation", ReplyAction="HangmanContract/IPortal/acceptInvitationResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/acceptInvitation")]
         void acceptInvitation(bool userAccepted);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IPortal/acceptInvitation", ReplyAction="HangmanContract/IPortal/acceptInvitationResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/acceptInvitation")]
         System.Threading.Tasks.Task acceptInvitationAsync(bool userAccepted);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/chooseGameWord")]
+        void chooseGameWord(string gameWord, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/chooseGameWord")]
+        System.Threading.Tasks.Task chooseGameWordAsync(string gameWord, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/guessLetter")]
+        void guessLetter(string letter, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/guessLetter")]
+        System.Threading.Tasks.Task guessLetterAsync(string letter, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/guessWord")]
+        void guessWord(string word, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/guessWord")]
+        System.Threading.Tasks.Task guessWordAsync(string word, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/timeUp")]
+        void timeUp(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/timeUp")]
+        System.Threading.Tasks.Task timeUpAsync(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/chat")]
+        void chat(string message, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/chat")]
+        System.Threading.Tasks.Task chatAsync(string message, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/leaveGame")]
+        void leaveGame(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/leaveGame")]
+        System.Threading.Tasks.Task leaveGameAsync(string username);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IPortalChannel : HangmanClient.HangmanContract.IPortal, System.ServiceModel.IClientChannel {
+    public interface IHangmanCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/startNewGame")]
+        void startNewGame(string[] guessers, string wordPicker, int[] wordRange);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/setWordLength")]
+        void setWordLength(int length);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/updatePlayersList")]
+        void updatePlayersList(string[] players, int[] stats);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/getResult")]
+        void getResult(string guess, bool isRight, int[] positions);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/endGame")]
+        void endGame(string[] winners);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/receiveMessage")]
+        void receiveMessage(string message);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/receiveInvitation")]
+        void receiveInvitation(string inviter, int invitees);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IHangmanChannel : HangmanContract.IHangman, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class PortalClient : System.ServiceModel.ClientBase<HangmanClient.HangmanContract.IPortal>, HangmanClient.HangmanContract.IPortal {
+    public partial class HangmanClient : System.ServiceModel.DuplexClientBase<HangmanContract.IHangman>, HangmanContract.IHangman {
         
-        public PortalClient() {
+        public HangmanClient(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public PortalClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public HangmanClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public PortalClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public HangmanClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public PortalClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public HangmanClient(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public PortalClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public HangmanClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public bool login(string username, string password) {
@@ -98,75 +160,6 @@ namespace HangmanClient.HangmanContract {
         public System.Threading.Tasks.Task acceptInvitationAsync(bool userAccepted) {
             return base.Channel.acceptInvitationAsync(userAccepted);
         }
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="HangmanContract", ConfigurationName="HangmanContract.IGamePlay")]
-    public interface IGamePlay {
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/chooseGameWord", ReplyAction="HangmanContract/IGamePlay/chooseGameWordResponse")]
-        void chooseGameWord(string gameWord, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/chooseGameWord", ReplyAction="HangmanContract/IGamePlay/chooseGameWordResponse")]
-        System.Threading.Tasks.Task chooseGameWordAsync(string gameWord, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/guessLetter", ReplyAction="HangmanContract/IGamePlay/guessLetterResponse")]
-        void guessLetter(char letter, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/guessLetter", ReplyAction="HangmanContract/IGamePlay/guessLetterResponse")]
-        System.Threading.Tasks.Task guessLetterAsync(char letter, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/guessWord", ReplyAction="HangmanContract/IGamePlay/guessWordResponse")]
-        void guessWord(string word, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/guessWord", ReplyAction="HangmanContract/IGamePlay/guessWordResponse")]
-        System.Threading.Tasks.Task guessWordAsync(string word, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/timeUp", ReplyAction="HangmanContract/IGamePlay/timeUpResponse")]
-        void timeUp(string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/timeUp", ReplyAction="HangmanContract/IGamePlay/timeUpResponse")]
-        System.Threading.Tasks.Task timeUpAsync(string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/chat", ReplyAction="HangmanContract/IGamePlay/chatResponse")]
-        void chat(string message, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/chat", ReplyAction="HangmanContract/IGamePlay/chatResponse")]
-        System.Threading.Tasks.Task chatAsync(string message, string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/leaveGame", ReplyAction="HangmanContract/IGamePlay/leaveGameResponse")]
-        void leaveGame(string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IGamePlay/leaveGame", ReplyAction="HangmanContract/IGamePlay/leaveGameResponse")]
-        System.Threading.Tasks.Task leaveGameAsync(string username);
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IGamePlayChannel : HangmanClient.HangmanContract.IGamePlay, System.ServiceModel.IClientChannel {
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GamePlayClient : System.ServiceModel.ClientBase<HangmanClient.HangmanContract.IGamePlay>, HangmanClient.HangmanContract.IGamePlay {
-        
-        public GamePlayClient() {
-        }
-        
-        public GamePlayClient(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
-        }
-        
-        public GamePlayClient(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
-        }
-        
-        public GamePlayClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
-        }
-        
-        public GamePlayClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
-        }
         
         public void chooseGameWord(string gameWord, string username) {
             base.Channel.chooseGameWord(gameWord, username);
@@ -176,11 +169,11 @@ namespace HangmanClient.HangmanContract {
             return base.Channel.chooseGameWordAsync(gameWord, username);
         }
         
-        public void guessLetter(char letter, string username) {
+        public void guessLetter(string letter, string username) {
             base.Channel.guessLetter(letter, username);
         }
         
-        public System.Threading.Tasks.Task guessLetterAsync(char letter, string username) {
+        public System.Threading.Tasks.Task guessLetterAsync(string letter, string username) {
             return base.Channel.guessLetterAsync(letter, username);
         }
         
