@@ -15,6 +15,7 @@ namespace HangmanClient
 
     {
         private Button[] gameWordLetters = new Button[9];
+        private Button[] keyboard = new Button[26];
         private HangmanContract.HangmanClient proxy;
         int atteptsLeft = 10, gameWordLenght=0;
 
@@ -38,32 +39,38 @@ namespace HangmanClient
             gameWordLetters[7] = buttonL8;
             gameWordLetters[8] = buttonL9;
 
-            buttonQ.Click += letter_click;
-            buttonW.Click += letter_click;
-            buttonE.Click += letter_click;
-            buttonR.Click += letter_click;
-            buttonT.Click += letter_click;
-            buttonY.Click += letter_click;
-            buttonU.Click += letter_click;
-            buttonI.Click += letter_click;
-            buttonO.Click += letter_click;
-            buttonP.Click += letter_click;
-            buttonA.Click += letter_click;
-            buttonS.Click += letter_click;
-            buttonD.Click += letter_click;
-            buttonF.Click += letter_click;
-            buttonG.Click += letter_click;
-            buttonH.Click += letter_click;
-            buttonJ.Click += letter_click;
-            buttonK.Click += letter_click;
-            buttonL.Click += letter_click;
-            buttonZ.Click += letter_click;
-            buttonX.Click += letter_click;
-            buttonC.Click += letter_click;
-            buttonV.Click += letter_click;
-            buttonB.Click += letter_click;
-            buttonN.Click += letter_click;
-            buttonM.Click += letter_click;
+            keyboard[0] = buttonQ;
+            keyboard[1] = buttonW;
+            keyboard[2] = buttonE;
+            keyboard[3] = buttonR;
+            keyboard[4] = buttonT;
+            keyboard[5] = buttonY;
+            keyboard[6] = buttonU;
+            keyboard[7] = buttonI;
+            keyboard[8] = buttonO;
+            keyboard[9] = buttonP;
+            keyboard[10] = buttonA;
+            keyboard[11] = buttonS;
+            keyboard[12] = buttonD;
+            keyboard[13] = buttonF;
+            keyboard[14] = buttonG;
+            keyboard[15] = buttonH;
+            keyboard[16] = buttonJ;
+            keyboard[17] = buttonK;
+            keyboard[18] = buttonL;
+            keyboard[19] = buttonZ;
+            keyboard[20] = buttonX;
+            keyboard[21] = buttonC;
+            keyboard[22] = buttonV;
+            keyboard[23] = buttonB;
+            keyboard[24] = buttonN;
+            keyboard[25] = buttonM;
+
+            for (int i = 0; i < keyboard.Length; i++) 
+            {
+                keyboard[i].Enabled = false;
+                keyboard[i].Click += letter_click;
+            }
 
             label2.Text = atteptsLeft.ToString();
 
@@ -123,6 +130,12 @@ namespace HangmanClient
 
         public void endGame(string[] winners)
         {
+            for (int i = 0; i < keyboard.Length; i++)
+            {
+                keyboard[i].Enabled = false;
+            }
+            
+
             MessageBox.Show(winners[0]+ "\nThe game word is: " + winners[1]);
         }
 
@@ -139,6 +152,15 @@ namespace HangmanClient
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
             proxy.invitePlayers(new string[0], "none");
+
+            for (int i = 0; i < keyboard.Length; i++)
+            {
+                keyboard[i].Enabled = true;
+            }
+            for (int i = 0; i < gameWordLetters.Length; i++)
+            {
+                gameWordLetters[i].Text = "";
+            }
         }
 
         public void letter_click(object sender, EventArgs e) 
