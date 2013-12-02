@@ -8,11 +8,12 @@ using System.ServiceModel;
 
 namespace HangmanServer
 {
-    
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]   
     class Server: HangmanContract.IHangman
     {
         private HangmanContract.IHangmanCallBack player;
-        private string gameWord = "EMIL";
+        private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
+        private string gameWord;
         int attemptsLeft = 10;
 
         public Server() 
@@ -34,6 +35,8 @@ namespace HangmanServer
         {
             player = OperationContext.Current.GetCallbackChannel<HangmanContract.IHangmanCallBack>();
             player.startNewGame(null, null, null);
+            gameWord = gameWords[new Random().Next(0, 5)];
+            attemptsLeft = 10;
             player.setWordLength(gameWord.Length);
         }
         

@@ -82,6 +82,7 @@ namespace HangmanClient
 
         public void setWordLength(int length) 
         {
+            atteptsLeft = 10;
             gameWordLenght = length;
             for (int i = 0; i < length; i++)
                 gameWordLetters[i].Visible = true;
@@ -133,9 +134,7 @@ namespace HangmanClient
             for (int i = 0; i < keyboard.Length; i++)
             {
                 keyboard[i].Enabled = false;
-            }
-            
-
+            }          
             MessageBox.Show(winners[0]+ "\nThe game word is: " + winners[1]);
         }
 
@@ -143,7 +142,6 @@ namespace HangmanClient
         public void receiveMessage(string message)
         {
         }
-
 
         public void receiveInvitation(string inviter, int invitees)
         {
