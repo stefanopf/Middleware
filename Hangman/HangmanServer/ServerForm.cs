@@ -22,6 +22,7 @@ namespace HangmanServer
 
         private void ServerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+
             if(serverIsOn)
                 host.Close();
         }

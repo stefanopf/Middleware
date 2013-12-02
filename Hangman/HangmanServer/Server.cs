@@ -23,6 +23,7 @@ namespace HangmanServer
 
         public bool login(string username, string password) 
         {
+            ServerInfo.playersList.Add(username);
             return false;
         }
 
