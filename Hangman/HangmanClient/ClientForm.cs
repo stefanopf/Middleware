@@ -84,8 +84,14 @@ namespace HangmanClient
         {
             atteptsLeft = 10;
             gameWordLenght = length;
-            for (int i = 0; i < length; i++)
-                gameWordLetters[i].Visible = true;
+            label2.Text = atteptsLeft.ToString();
+            for (int i = 0; i < gameWordLetters.Length; i++)
+            {
+                if (i < length)
+                    gameWordLetters[i].Visible = true;
+                else
+                    gameWordLetters[i].Visible = false;
+            }
             
         }
 
