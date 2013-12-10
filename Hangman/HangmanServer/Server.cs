@@ -8,13 +8,14 @@ using System.ServiceModel;
 
 namespace HangmanServer
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]   
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]   
     class Server: HangmanContract.IHangman
     {
         private HangmanContract.IHangmanCallBack player;
         private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
         private string gameWord;
-        int attemptsLeft = 10;
+        private int attemptsLeft = 10;
+
 
         public Server() 
         {
@@ -23,13 +24,12 @@ namespace HangmanServer
 
         public bool login(string username, string password) 
         {
-            ServerInfo.playersList.Add(username);
-            return false;
+            return ServerInfo.checkLoginInfo(username, password);
         }
 
         public bool register(string username, string password)
         {
-            return false;
+            return ServerInfo.registerPlayer(username, password);
         }
 
         public void invitePlayers(string[] invitedPlayerNames, string username) //invites players to a game
@@ -70,16 +70,26 @@ namespace HangmanServer
             if (!isRight)
                 attemptsLeft--;
 
-            player.getResult(letter, isRight, pos.ToArray());
-
-            if(attemptsLeft==0)            
+            if (attemptsLeft == 0)
             {
-                string[] gameResults = {"You have lost", gameWord };
-                player.endGame(gameResults);
+                player.endGame(new string[] { "Computer" }, gameWord);
+            }
+            else 
+            {
+                player.receiveResult(letter, isRight, pos.ToArray());
             }
         }
 
-        public void guessWord(string word, string username) { }
+        public void guessWord(string word, string username) 
+        {
+            if (word == gameWord)
+            {
+                player.receiveResult(word, true, null);
+                player.endGame(new string[] { username }, gameWord);
+            }
+            else
+                player.receiveResult(word, false, null);
+        }
 
         public void timeUp(string username) { }
 

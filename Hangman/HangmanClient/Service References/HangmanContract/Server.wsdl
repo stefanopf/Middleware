@@ -448,7 +448,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_IHangman_getResult_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IHangman_receiveResult_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -644,10 +644,10 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getResult">
-      <soap12:operation soapAction="HangmanContract/IHangman/getResult" style="document" />
+    <wsdl:operation name="receiveResult">
+      <soap12:operation soapAction="HangmanContract/IHangman/receiveResult" style="document" />
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_IHangman_getResult_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IHangman_receiveResult_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

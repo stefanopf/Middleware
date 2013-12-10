@@ -52,8 +52,8 @@
   <wsdl:message name="IHangman_updatePlayersList_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:updatePlayersList" />
   </wsdl:message>
-  <wsdl:message name="IHangman_getResult_OutputCallbackMessage">
-    <wsdl:part name="parameters" element="tns:getResult" />
+  <wsdl:message name="IHangman_receiveResult_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:receiveResult" />
   </wsdl:message>
   <wsdl:message name="IHangman_endGame_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:endGame" />
@@ -106,8 +106,8 @@
     <wsdl:operation name="updatePlayersList">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/updatePlayersList" message="tns:IHangman_updatePlayersList_OutputCallbackMessage" />
     </wsdl:operation>
-    <wsdl:operation name="getResult">
-      <wsdl:output wsaw:Action="HangmanContract/IHangman/getResult" message="tns:IHangman_getResult_OutputCallbackMessage" />
+    <wsdl:operation name="receiveResult">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/receiveResult" message="tns:IHangman_receiveResult_OutputCallbackMessage" />
     </wsdl:operation>
     <wsdl:operation name="endGame">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/endGame" message="tns:IHangman_endGame_OutputCallbackMessage" />

@@ -88,11 +88,11 @@ namespace HangmanClient.HangmanContract {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/updatePlayersList")]
         void updatePlayersList(string[] players, int[] stats);
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/getResult")]
-        void getResult(string guess, bool isRight, int[] positions);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/receiveResult")]
+        void receiveResult(string guess, bool isRight, int[] positions);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/endGame")]
-        void endGame(string[] winners);
+        void endGame(string[] winners, string gameWord);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/receiveMessage")]
         void receiveMessage(string message);
