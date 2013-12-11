@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.ServiceModel;
-
 namespace HangmanClient
 {
     public partial class ClientForm : Form, HangmanContract.IHangmanCallback
@@ -79,7 +73,15 @@ namespace HangmanClient
         }
         
         public void startNewGame(string[] guessers, string wordPicker, int[] wordRange) 
-        { 
+        {
+            for (int i = 0; i < keyboardButtons.Length; i++)
+            {
+                keyboardButtons[i].Enabled = true;
+            }
+            for (int i = 0; i < gameWordLetters.Length; i++)
+            {
+                gameWordLetters[i].Text = "";
+            }
         }
 
         public void setWordLength(int length) 
@@ -155,16 +157,7 @@ namespace HangmanClient
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
-            proxy.invitePlayers(new string[0], "none");
-
-            for (int i = 0; i < keyboardButtons.Length; i++)
-            {
-                keyboardButtons[i].Enabled = true;
-            }
-            for (int i = 0; i < gameWordLetters.Length; i++)
-            {
-                gameWordLetters[i].Text = "";
-            }
+            proxy.invitePlayers(new string[0], "none");            
         }
 
         public void letterGuess_click(object sender, EventArgs e) 

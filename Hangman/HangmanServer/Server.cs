@@ -1,19 +1,17 @@
-﻿using System;
+﻿using HangmanContract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.ServiceModel;
 
 namespace HangmanServer
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]   
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]   
     class Server: HangmanContract.IHangman
     {
-        private HangmanContract.IHangmanCallBack player;
+        private IHangmanCallBack player;
         private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
-        private string gameWord;
+        private string gameWord, playerName;
         private int attemptsLeft = 10;
 
 
@@ -24,7 +22,13 @@ namespace HangmanServer
 
         public bool login(string username, string password) 
         {
-            return ServerInfo.checkLoginInfo(username, password);
+            if (ServerInfo.login(username, password, OperationContext.Current.GetCallbackChannel<IHangmanCallBack>()))//if login is successful
+            {
+                player =  OperationContext.Current.GetCallbackChannel<IHangmanCallBack>();
+                playerName = username;
+                return true;
+            }
+            return false;
         }
 
         public bool register(string username, string password)
@@ -34,7 +38,6 @@ namespace HangmanServer
 
         public void invitePlayers(string[] invitedPlayerNames, string username) //invites players to a game
         {
-            player = OperationContext.Current.GetCallbackChannel<HangmanContract.IHangmanCallBack>();
             player.startNewGame(null, null, null);
             gameWord = gameWords[new Random().Next(0, 5)];
             attemptsLeft = 10;

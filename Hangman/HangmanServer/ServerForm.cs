@@ -32,14 +32,16 @@ namespace HangmanServer
             if (serverIsOn)
             {
                 host.Close();
-                label1.Text = "Server is Off";
+               // labelMessage.Text = ServerInfo.saveDataBase();
+                labelStatus.Text = "Server is Off";
                 button1.Text = "Turn on Server";
             }
             else
             {
                 host = new ServiceHost(typeof(Server));
+                //labelMessage.Text = ServerInfo.LoadDataBase();
                 host.Open();
-                label1.Text = "Server is On";
+                labelStatus.Text = "Server is On";
                 button1.Text = "Turn off Server";
             }
             serverIsOn = !serverIsOn;
