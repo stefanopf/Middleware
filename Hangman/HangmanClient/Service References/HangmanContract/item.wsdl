@@ -10,9 +10,6 @@
   <wsdl:message name="IHangman_login_InputMessage">
     <wsdl:part name="parameters" element="tns:login" />
   </wsdl:message>
-  <wsdl:message name="IHangman_login_OutputMessage">
-    <wsdl:part name="parameters" element="tns:loginResponse" />
-  </wsdl:message>
   <wsdl:message name="IHangman_register_InputMessage">
     <wsdl:part name="parameters" element="tns:register" />
   </wsdl:message>
@@ -64,10 +61,12 @@
   <wsdl:message name="IHangman_receiveInvitation_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:receiveInvitation" />
   </wsdl:message>
+  <wsdl:message name="IHangman_loginConfirmation_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:loginConfirmation" />
+  </wsdl:message>
   <wsdl:portType name="IHangman">
     <wsdl:operation name="login">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/login" message="tns:IHangman_login_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IHangman/loginResponse" message="tns:IHangman_login_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="register">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/register" message="tns:IHangman_register_InputMessage" />
@@ -117,6 +116,9 @@
     </wsdl:operation>
     <wsdl:operation name="receiveInvitation">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/receiveInvitation" message="tns:IHangman_receiveInvitation_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="loginConfirmation">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/loginConfirmation" message="tns:IHangman_loginConfirmation_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

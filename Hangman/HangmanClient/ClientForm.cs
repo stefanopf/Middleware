@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.ServiceModel;
+using System.Collections.Generic;
 namespace HangmanClient
 {
     public partial class ClientForm : Form, HangmanContract.IHangmanCallback
@@ -26,6 +27,7 @@ namespace HangmanClient
 
         private void ClientForm_Shown(Object sender, EventArgs e)
         {
+           
             displayLogin();
 
             gameWordLetters[0] = buttonL1;
@@ -99,8 +101,25 @@ namespace HangmanClient
             
         }
 
-        public void updatePlayersList(string[] players, int[] stats)
+        public void updatePlayersList(string[] players, string[] correctGuesses, string[] totalGuesses)
         {
+            listView1.Items.Clear();
+            for (int i = 0; i < players.Count<string>();  i++)
+            {
+                if (players[i].ToLower() != username.ToLower())
+                {
+                    string[] items = new string[2];
+                    items[0] = players[i];
+                    items[1] = correctGuesses[i] + "\\" + totalGuesses[i];
+
+                    ListViewItem lstItem = new ListViewItem(items);
+                    listView1.Items.Add(lstItem);
+                }
+                else
+                { 
+                    labelYourStats.Text = "Your stats:" + "\n"+ correctGuesses[i]+ "\\"+ totalGuesses[i];
+                }
+            }         
         }
 
         public void receiveResult(string guess, bool isRight,int[] positions) //receives the result of a guess 
@@ -153,34 +172,26 @@ namespace HangmanClient
 
         public void receiveInvitation(string inviter, int invitees)
         {
+            MessageBox.Show("You have received an invitation for a game with " + invitees + " other players.");
         }
 
-        private void buttonNewGame_Click(object sender, EventArgs e)
+        public void loginConfirmation(bool confirmation)
         {
-            proxy.invitePlayers(new string[0], "none");            
-        }
-
-        public void letterGuess_click(object sender, EventArgs e) 
-        {
-            Button b = (Button)sender;
-            b.Enabled = false;
-            proxy.guessLetter(b.Text, username);
-        }
-        
-        private void buttonGuessWord_Click(object sender, EventArgs e)
-        {
-            if (textBoxWordGuess.Text.Length == gameWordLenght)
+            if (confirmation == true)
             {
-                proxy.guessWord(textBoxWordGuess.Text.ToUpper(), username);
-                textBoxWordGuess.Text = "";
+                displayPortal();
             }
             else
             {
-                MessageBox.Show("Word guess has invalid lenght");
+                MessageBox.Show("Incorrect username or password");
+                buttonRegister.Text = "Register";
             }
+            buttonLogin.Text = "Login";
+            textBoxUserName.Enabled = false;
+            textBoxPassword.Enabled = false;
         }
 
-        private void displayLogin() 
+        private void displayLogin()
         {
             panelLogin.Location = new Point(0, 0);
             panelPortal.Visible = false;
@@ -189,8 +200,9 @@ namespace HangmanClient
             state = 0;
         }
 
-        private void displayPortal() 
+        private void displayPortal()
         {
+            labelPlayerName.Text = username;
             panelLogin.Visible = false;
             panelPortal.Visible = true;
             panelGamePlay.Visible = false;
@@ -211,21 +223,47 @@ namespace HangmanClient
             this.Invalidate();
         }
 
+        private void buttonNewGame_Click(object sender, EventArgs e)
+        {
+            proxy.invitePlayers(new string[0], "none");            
+        }
+
+        private void letterGuess_click(object sender, EventArgs e) 
+        {
+            Button b = (Button)sender;
+            b.Enabled = false;
+            proxy.guessLetter(b.Text, username);
+        }
+        
+        private void buttonGuessWord_Click(object sender, EventArgs e)
+        {
+            if (textBoxWordGuess.Text.Length == gameWordLenght)
+            {
+                proxy.guessWord(textBoxWordGuess.Text.ToUpper(), username);
+                textBoxWordGuess.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("Word guess has invalid lenght");
+            }
+        }
+
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                if (proxy.login(textBoxUserName.Text, textBoxPassword.Text))
-                {
-                    username = textBoxUserName.Text;
-                    displayGamePlay();
-                }
-                else
-                    MessageBox.Show("Invalid username or password");
+                buttonLogin.Text = "Logging\nin...";
+                textBoxUserName.Enabled = false;
+                textBoxPassword.Enabled = false;
+                proxy.login(textBoxUserName.Text, textBoxPassword.Text);
+                this.username = textBoxUserName.Text;
             }
             catch
             {
                 MessageBox.Show("Could not connect to server");
+                buttonLogin.Text = "Login";
+                textBoxUserName.Enabled = true;
+                textBoxPassword.Enabled = true;
             }
         }
 
@@ -239,6 +277,8 @@ namespace HangmanClient
                 if (textBoxUserName.Text.Length >=3 && textBoxUserName.Text.Length <=20
                     && textBoxPassword.Text.Length >= 5 && textBoxPassword.Text.Length <=20)
                 {
+                    textBoxUserName.Enabled = false;
+                    textBoxPassword.Enabled = false;
                     if (proxy.register(textBoxUserName.Text, textBoxPassword.Text))
                     {
                         s+="Registration successful!";
@@ -281,8 +321,21 @@ namespace HangmanClient
             catch 
             {
                 MessageBox.Show("Could not connect to the server");
+                textBoxUserName.Enabled = true;
+                textBoxPassword.Enabled = true;
                 buttonRegister.Text = "Register";
             }
+        }
+
+        private void buttonInvite_Click(object sender, EventArgs e)
+        {
+            var selectedItems =listView1.SelectedItems;
+            List<string> usernames = new List<string>();
+            foreach (ListViewItem selectedItem in selectedItems)
+            {
+                usernames.Add(selectedItem.Text);
+            }
+            proxy.invitePlayers(usernames.ToArray(), username);
         }
 
     }

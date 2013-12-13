@@ -9,13 +9,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="loginResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="loginResult" type="xs:boolean" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
   <xs:element name="register">
     <xs:complexType>
       <xs:sequence>
@@ -112,7 +105,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="players" nillable="true" type="q4:ArrayOfstring" />
-        <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="stats" nillable="true" type="q5:ArrayOfint" />
+        <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="correctGuesses" nillable="true" type="q5:ArrayOfstring" />
+        <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="totalGuesses" nillable="true" type="q6:ArrayOfstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -121,14 +115,14 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="guess" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="isRight" type="xs:boolean" />
-        <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="positions" nillable="true" type="q6:ArrayOfint" />
+        <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="positions" nillable="true" type="q7:ArrayOfint" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="endGame">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="winners" nillable="true" type="q7:ArrayOfstring" />
+        <xs:element xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="winners" nillable="true" type="q8:ArrayOfstring" />
         <xs:element minOccurs="0" name="gameWord" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
@@ -145,6 +139,13 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="inviter" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="invitees" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="loginConfirmation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="confirmation" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

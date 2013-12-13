@@ -11,7 +11,21 @@ namespace HangmanServer
         private bool _isOnline;
         private int _totalGuesses;
         private int _correctGuesses;
+        private Game _game;
+        private Invitation _invitation;
         IHangmanCallBack _context;
+
+        public Invitation Invitation 
+        {
+            get { return _invitation; }
+            set { _invitation = value; }
+        }
+
+        public Game Game
+        {
+            get { return _game; }
+            set { _game = value; } 
+        }
 
         public int CorrectGuesses
         {

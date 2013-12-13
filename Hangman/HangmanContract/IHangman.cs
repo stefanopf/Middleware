@@ -10,8 +10,8 @@ namespace HangmanContract
     [ServiceContract(Namespace = "HangmanContract", CallbackContract = typeof(IHangmanCallBack))]
     public interface IHangman
     {
-        [OperationContract]
-        bool login(string username, string password);
+        [OperationContract(IsOneWay=true)]
+        void login(string username, string password);
 
         [OperationContract]
         bool register(string username, string password);
@@ -50,7 +50,7 @@ namespace HangmanContract
         void setWordLength(int length);
 
         [OperationContract(IsOneWay = true)]
-        void updatePlayersList(string[] players, int[] stats);
+        void updatePlayersList(string[] players, string[] correctGuesses, string[] totalGuesses);
 
         [OperationContract(IsOneWay = true)]
         void receiveResult(string guess, bool isRight, int[] positions); //receives the result of a guess
@@ -63,5 +63,8 @@ namespace HangmanContract
 
         [OperationContract(IsOneWay = true)]
         void receiveInvitation(string inviter, int invitees);
+
+        [OperationContract(IsOneWay = true)]
+        void loginConfirmation(bool confirmation);
     }
 }

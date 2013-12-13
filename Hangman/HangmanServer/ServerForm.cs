@@ -13,11 +13,38 @@ namespace HangmanServer
 {
     public partial class ServerForm : Form
     {
-        ServiceHost host;
-        bool serverIsOn = false;
+        private ServiceHost host;
+        private bool serverIsOn = false;
+        private Timer t = new Timer();
+
         public ServerForm()
         {
+            t.Interval = 1000;
+            t.Tick += updateScreen;
             InitializeComponent();
+        }
+
+        private void updateScreen(object sender, EventArgs e)
+        {
+            listView1.Items.Clear();
+            List<List<string>> listOfItems = Server.getOnlinePlayersList();
+            List<string> userNames = listOfItems[0];//0 = username
+            List<string> totalGuesses = listOfItems[1];//1 = total guesses
+            List<string> correctGuesses = listOfItems[2];//2 = correct guesses
+            List<string> gameIDs = listOfItems[3];
+
+
+
+            for (int i = 0; i < userNames.Count; i++)
+            {
+                string[] items = new string[3];
+                items[0] = userNames[i];
+                items[1] = correctGuesses[i] + "\\" + totalGuesses[i];
+                items[2] = gameIDs[i];
+
+                ListViewItem lstItem = new ListViewItem(items);
+                listView1.Items.Add(lstItem);
+            }
         }
 
         private void ServerForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -35,6 +62,7 @@ namespace HangmanServer
                // labelMessage.Text = ServerInfo.saveDataBase();
                 labelStatus.Text = "Server is Off";
                 button1.Text = "Turn on Server";
+                t.Stop();
             }
             else
             {
@@ -43,8 +71,10 @@ namespace HangmanServer
                 host.Open();
                 labelStatus.Text = "Server is On";
                 button1.Text = "Turn off Server";
+                t.Start();
             }
             serverIsOn = !serverIsOn;
         }
+
     }
 }
