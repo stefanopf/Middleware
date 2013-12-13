@@ -178,7 +178,7 @@ namespace HangmanClient
 
         public void receiveInvitation(string inviter, int invitees)
         {
-            if (MessageBox.Show(inviter + "has invited you to start a game with other " + invitees + " players", "New game invitation", MessageBoxButtons.YesNoCancel) == System.Windows.Forms.DialogResult.OK)
+            if (MessageBox.Show(inviter + "has invited you to start a game with other " + invitees + " players", "New game invitation", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.OK)
             {
                 proxy.acceptInvitation(true);
             }
