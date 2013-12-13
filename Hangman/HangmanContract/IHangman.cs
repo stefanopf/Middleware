@@ -23,31 +23,31 @@ namespace HangmanContract
         void invitePlayers(string[] invitedPlayerNames, string username); //invites players to a game
 
         [OperationContract(IsOneWay = true)]
-        void acceptInvitation(bool userAccepted);
+        void acceptInvitation(string username, bool userAccepted, int id);
 
         [OperationContract(IsOneWay = true)]
-        void chooseGameWord(string gameWord, string username);
+        void chooseGameWord(string gameWord, string username, int gameId);
 
         [OperationContract(IsOneWay = true)]
-        void guessLetter(string letter, string username);
+        void guessLetter(string letter, string username, int gameId);
 
         [OperationContract(IsOneWay = true)]
-        void guessWord(string word, string username);
+        void guessWord(string word, string username, int gameId);
 
         [OperationContract(IsOneWay = true)]
-        void timeUp(string username);
+        void timeUp(string username, int gameId);
 
         [OperationContract(IsOneWay = true)]
-        void chat(string message, string username);
+        void chat(string message, string username, int gameId);
 
         [OperationContract(IsOneWay = true)]
-        void leaveGame(string username);
+        void leaveGame(string username, int gameId);
     }
 
     public interface IHangmanCallBack
     {
         [OperationContract(IsOneWay = true)]
-        void startNewGame(string[] guessers, string wordPicker, int[] wordRange);
+        void startNewGame(string[] guessers, string wordPicker, int[] wordRange, int gameId);
 
         [OperationContract(IsOneWay = true)]
         void setWordLength(int length);
@@ -65,7 +65,7 @@ namespace HangmanContract
         void receiveMessage(string message);
 
         [OperationContract(IsOneWay = true)]
-        void receiveInvitation(string inviter, int invitees);
+        void receiveInvitation(string inviter, int invitees, int invitationId);
 
         [OperationContract(IsOneWay = true)]
         void loginConfirmation(bool confirmation);

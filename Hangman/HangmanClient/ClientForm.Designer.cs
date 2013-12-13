@@ -83,16 +83,21 @@
             this.buttonRegister = new System.Windows.Forms.Button();
             this.panelGamePlay = new System.Windows.Forms.Panel();
             this.panelPortal = new System.Windows.Forms.Panel();
-            this.labelPlayerName = new System.Windows.Forms.Label();
-            this.labelYourStats = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.buttonInvite = new System.Windows.Forms.Button();
             this.labelAvailablePlayers = new System.Windows.Forms.Label();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.ColumnPlayer = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnGuessings = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonInvite = new System.Windows.Forms.Button();
+            this.labelYourStats = new System.Windows.Forms.Label();
+            this.labelPlayerName = new System.Windows.Forms.Label();
+            this.panelWaiting = new System.Windows.Forms.Panel();
+            this.labelWaiting = new System.Windows.Forms.Label();
+            this.textBoxChooseGameWord = new System.Windows.Forms.TextBox();
+            this.buttonChooseGameWord = new System.Windows.Forms.Button();
             this.panelLogin.SuspendLayout();
             this.panelGamePlay.SuspendLayout();
             this.panelPortal.SuspendLayout();
+            this.panelWaiting.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonNewGame
@@ -655,7 +660,6 @@
             this.buttonGuessWord.TabIndex = 49;
             this.buttonGuessWord.Text = "Guess Word";
             this.buttonGuessWord.UseVisualStyleBackColor = true;
-            this.buttonGuessWord.Click += new System.EventHandler(this.buttonGuessWord_Click);
             // 
             // buttonSend
             // 
@@ -775,26 +779,27 @@
             this.panelPortal.TabIndex = 56;
             this.panelPortal.Visible = false;
             // 
-            // labelPlayerName
+            // buttonInvite
             // 
-            this.labelPlayerName.AutoSize = true;
-            this.labelPlayerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPlayerName.Location = new System.Drawing.Point(16, 10);
-            this.labelPlayerName.Name = "labelPlayerName";
-            this.labelPlayerName.Size = new System.Drawing.Size(181, 31);
-            this.labelPlayerName.TabIndex = 0;
-            this.labelPlayerName.Text = "PlayerXXXXX";
+            this.buttonInvite.AutoSize = true;
+            this.buttonInvite.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInvite.Location = new System.Drawing.Point(136, 397);
+            this.buttonInvite.Name = "buttonInvite";
+            this.buttonInvite.Size = new System.Drawing.Size(142, 34);
+            this.buttonInvite.TabIndex = 4;
+            this.buttonInvite.Text = "Invite for game";
+            this.buttonInvite.UseVisualStyleBackColor = true;
+            this.buttonInvite.Click += new System.EventHandler(this.buttonInvite_Click);
             // 
-            // labelYourStats
+            // labelAvailablePlayers
             // 
-            this.labelYourStats.AutoSize = true;
-            this.labelYourStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelYourStats.Location = new System.Drawing.Point(257, 17);
-            this.labelYourStats.Name = "labelYourStats";
-            this.labelYourStats.Size = new System.Drawing.Size(99, 24);
-            this.labelYourStats.TabIndex = 1;
-            this.labelYourStats.Text = "Your Stats:";
-            this.labelYourStats.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelAvailablePlayers.AutoSize = true;
+            this.labelAvailablePlayers.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAvailablePlayers.Location = new System.Drawing.Point(18, 72);
+            this.labelAvailablePlayers.Name = "labelAvailablePlayers";
+            this.labelAvailablePlayers.Size = new System.Drawing.Size(131, 20);
+            this.labelAvailablePlayers.TabIndex = 3;
+            this.labelAvailablePlayers.Text = "Available Players:";
             // 
             // listView1
             // 
@@ -808,16 +813,6 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
-            // labelAvailablePlayers
-            // 
-            this.labelAvailablePlayers.AutoSize = true;
-            this.labelAvailablePlayers.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAvailablePlayers.Location = new System.Drawing.Point(18, 72);
-            this.labelAvailablePlayers.Name = "labelAvailablePlayers";
-            this.labelAvailablePlayers.Size = new System.Drawing.Size(131, 20);
-            this.labelAvailablePlayers.TabIndex = 3;
-            this.labelAvailablePlayers.Text = "Available Players:";
-            // 
             // ColumnPlayer
             // 
             this.ColumnPlayer.Text = "Player";
@@ -828,17 +823,67 @@
             this.ColumnGuessings.Text = "Guessings (correct/total)";
             this.ColumnGuessings.Width = 137;
             // 
-            // buttonInvite
+            // labelYourStats
             // 
-            this.buttonInvite.AutoSize = true;
-            this.buttonInvite.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonInvite.Location = new System.Drawing.Point(136, 397);
-            this.buttonInvite.Name = "buttonInvite";
-            this.buttonInvite.Size = new System.Drawing.Size(142, 34);
-            this.buttonInvite.TabIndex = 4;
-            this.buttonInvite.Text = "Invite for game";
-            this.buttonInvite.UseVisualStyleBackColor = true;
-            this.buttonInvite.Click += new System.EventHandler(this.buttonInvite_Click);
+            this.labelYourStats.AutoSize = true;
+            this.labelYourStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelYourStats.Location = new System.Drawing.Point(257, 17);
+            this.labelYourStats.Name = "labelYourStats";
+            this.labelYourStats.Size = new System.Drawing.Size(99, 24);
+            this.labelYourStats.TabIndex = 1;
+            this.labelYourStats.Text = "Your Stats:";
+            this.labelYourStats.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelPlayerName
+            // 
+            this.labelPlayerName.AutoSize = true;
+            this.labelPlayerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPlayerName.Location = new System.Drawing.Point(16, 10);
+            this.labelPlayerName.Name = "labelPlayerName";
+            this.labelPlayerName.Size = new System.Drawing.Size(181, 31);
+            this.labelPlayerName.TabIndex = 0;
+            this.labelPlayerName.Text = "PlayerXXXXX";
+            // 
+            // panelWaiting
+            // 
+            this.panelWaiting.Controls.Add(this.buttonChooseGameWord);
+            this.panelWaiting.Controls.Add(this.textBoxChooseGameWord);
+            this.panelWaiting.Controls.Add(this.labelWaiting);
+            this.panelWaiting.Location = new System.Drawing.Point(477, 25);
+            this.panelWaiting.Name = "panelWaiting";
+            this.panelWaiting.Size = new System.Drawing.Size(209, 138);
+            this.panelWaiting.TabIndex = 57;
+            this.panelWaiting.Visible = false;
+            // 
+            // labelWaiting
+            // 
+            this.labelWaiting.AutoSize = true;
+            this.labelWaiting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWaiting.Location = new System.Drawing.Point(11, 20);
+            this.labelWaiting.Name = "labelWaiting";
+            this.labelWaiting.Size = new System.Drawing.Size(161, 16);
+            this.labelWaiting.TabIndex = 0;
+            this.labelWaiting.Text = "Waiting for other players...";
+            // 
+            // textBoxChooseGameWord
+            // 
+            this.textBoxChooseGameWord.Location = new System.Drawing.Point(24, 73);
+            this.textBoxChooseGameWord.MaxLength = 20;
+            this.textBoxChooseGameWord.Name = "textBoxChooseGameWord";
+            this.textBoxChooseGameWord.Size = new System.Drawing.Size(151, 20);
+            this.textBoxChooseGameWord.TabIndex = 58;
+            this.textBoxChooseGameWord.Visible = false;
+            // 
+            // buttonChooseGameWord
+            // 
+            this.buttonChooseGameWord.Location = new System.Drawing.Point(66, 99);
+            this.buttonChooseGameWord.Name = "buttonChooseGameWord";
+            this.buttonChooseGameWord.Size = new System.Drawing.Size(75, 23);
+            this.buttonChooseGameWord.TabIndex = 59;
+            this.buttonChooseGameWord.Text = "Go";
+            this.buttonChooseGameWord.UseVisualStyleBackColor = true;
+            this.buttonChooseGameWord.Visible = false;
+            this.buttonChooseGameWord.Click += new System.EventHandler(this.buttonChooseGameWord_Click);
             // 
             // ClientForm
             // 
@@ -847,6 +892,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1246, 638);
+            this.Controls.Add(this.panelWaiting);
             this.Controls.Add(this.panelPortal);
             this.Controls.Add(this.panelGamePlay);
             this.Controls.Add(this.panelLogin);
@@ -859,6 +905,8 @@
             this.panelGamePlay.PerformLayout();
             this.panelPortal.ResumeLayout(false);
             this.panelPortal.PerformLayout();
+            this.panelWaiting.ResumeLayout(false);
+            this.panelWaiting.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -927,6 +975,10 @@
         private System.Windows.Forms.Label labelYourStats;
         private System.Windows.Forms.Button buttonInvite;
         private System.Windows.Forms.ColumnHeader ColumnGuessings;
+        private System.Windows.Forms.Panel panelWaiting;
+        private System.Windows.Forms.Button buttonChooseGameWord;
+        private System.Windows.Forms.TextBox textBoxChooseGameWord;
+        private System.Windows.Forms.Label labelWaiting;
     }
 }
 

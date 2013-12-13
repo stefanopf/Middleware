@@ -7,19 +7,21 @@ using System.ServiceModel;
 namespace HangmanServer
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]   
-    class Server: HangmanContract.IHangman
+    public class Server: HangmanContract.IHangman
     {
         private delegate void listChanged(string[] players, string[] correctGuesses, string[] totalGuesses);
         private event listChanged listHasChanged;
 
-        private IHangmanCallBack player;
         private static List<Player> listOfPlayers;//this is our database
         private static List<Invitation> listOfInvitations = new List<Invitation>();
-        private static List<Game> listOfGame = new List<Game>();
-        private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
-        private string gameWord, playerName;
-        private int attemptsLeft = 10;
-        private decimal count = 0;
+        private static List<Game> listOfGames = new List<Game>();
+       // private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
+        private int count = 0;
+
+        public List<Game> ListOfGames 
+        {
+            get { return listOfGames; } 
+        }
 
         public Server() 
         {
@@ -98,71 +100,81 @@ namespace HangmanServer
             {
                 try
                 {
-                    invitedPlayers.Add(listOfPlayers.Find(p => p.Username.ToLower() == invitedPlayerNames[i].ToLower()));
+                    Player plr = listOfPlayers.Find(p => p.Username.ToLower() == invitedPlayerNames[i].ToLower());
+                    if(plr.IsOnline && plr.Game == null)
+                        invitedPlayers.Add(plr);
+                    else
+                        Console.WriteLine("Player \""+invitedPlayerNames[i] + " could not be invited because he is either in another game or offline");
                 }
                 catch
                 {
+                    Console.WriteLine("Could not find \""+invitedPlayerNames[i] +"\" in the players list");
+                    return;
                 }
             }
-            listOfInvitations.Add(new Invitation(invitedPlayers,inviter,count, 15000));
+            Server s = this;
+            Invitation inv = new Invitation(invitedPlayers, inviter, count, 15000, s);
+            listOfInvitations.Add(inv);
             count++;
         }
         
-        public void acceptInvitation(bool userAccepted) 
-        { 
-        
-        }
-
-        public void chooseGameWord(string gameWord, string username) { }
-
-        public void guessLetter(string letter, string username)
+        public void acceptInvitation(string username, bool userAccepted, int id) 
         {
-            char c = letter.ToCharArray()[0]; //gets first char of the string
-            List<int> pos = new List<int>();
-            bool isRight = false;
-
-            if(gameWord.Contains(letter.ToCharArray()[0]))
+            try
             {
-                for (int i = 0; i < gameWord.Length; i++) 
-                {
-                    if (gameWord[i] == c)
-                    {
-                        pos.Add(i);
-                        
-                    }
-                }
-                isRight = true;
+                Invitation inv = listOfInvitations.Find(i => i.Id == id);
+                inv.acceptInvitation(username,userAccepted);
             }
-
-            if (!isRight)
-                attemptsLeft--;
-
-            if (attemptsLeft == 0)
+            catch
             {
-                player.endGame(new string[] { "Computer" }, gameWord);
-            }
-            else 
-            {
-                player.receiveResult(letter, isRight, pos.ToArray());
+                
             }
         }
 
-        public void guessWord(string word, string username) 
+        public void chooseGameWord(string gameWord, string username, int id) 
         {
-            if (word == gameWord)
+            try
             {
-                player.receiveResult(word, true, null);
-                player.endGame(new string[] { username }, gameWord);
+                listOfGames.Find(g => g.Id == id).setGameWord(gameWord, username);
+
             }
-            else
-                player.receiveResult(word, false, null);
+            catch
+            {
+                Console.WriteLine("Could not find game \"" + id + "\" when \"" + username + "\" set the gameword to \"" + gameWord + "\"");
+            }
         }
 
-        public void timeUp(string username) { }
+        public void guessLetter(string letter, string username, int id)
+        {
+            try
+            {
+                listOfGames.Find(g => g.Id == id).guess(letter, username);
 
-        public void chat(string message, string username) { }
+            }
+            catch 
+            {
+                Console.WriteLine("Could not find game \"" + id + "\" when \"" + username + "\"guessed letter \"" + letter + "\"");
+            }
+        }
 
-        public void leaveGame(string username) 
+        public void guessWord(string word, string username, int id) 
+        {
+            try
+            {
+                listOfGames.Find(g => g.Id == id).guess(word, username);
+
+            }
+            catch
+            {
+                Console.WriteLine("Could not find game \"" + id + "\" when \"" + username + "\"guessed word \"" + word + "\"");
+            }
+        }
+
+        public void timeUp(string username, int id) { }
+
+        public void chat(string message, string username, int id) { }
+
+        public void leaveGame(string username, int id) 
         {
             try//tries to find a player whose name matches
             {

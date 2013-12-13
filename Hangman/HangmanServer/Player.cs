@@ -4,7 +4,7 @@ using HangmanContract;
 namespace HangmanServer
 {
     [Serializable]
-    class Player
+    public class Player
     {
         private string _username;
         private string _password;
