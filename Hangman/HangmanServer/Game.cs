@@ -17,6 +17,24 @@ namespace HangmanServer
         private int _id;
         private Server _server;
 
+        public List<Player> Guessers 
+        {
+            get { return _guessers; }
+            set { this._guessers = value; } 
+        }
+
+        public Player WordPicker
+        {
+            get 
+            { 
+                return _wordPicker; 
+            }
+            set
+            {
+                this._wordPicker = value;
+            }
+        }
+
         public int Id
         { 
             get { return _id; } 
@@ -41,8 +59,10 @@ namespace HangmanServer
 
             foreach (Player p in _guessers)
             {
+                p.Game = this;
                 p.Context.startNewGame(_guessersNames, _wordPicker.Username, wordRange, _id);
             }
+            _wordPicker.Game = this;
             _wordPicker.Context.startNewGame(_guessersNames, _wordPicker.Username, wordRange, _id);
 
         }
@@ -74,6 +94,8 @@ namespace HangmanServer
                 List<int> pos = new List<int>();
                 bool isRight = false;
 
+
+                ////START VERIFYING GUESS
                 if (guess.Length == 1)//if player guessed a letter
                 {
                     if (_gameWord.Contains(guess.ToLower().ToCharArray()[0]))//if word contains guessed letter
@@ -83,6 +105,7 @@ namespace HangmanServer
                             if (_gameWord[i] == guess.ToLower().ToCharArray()[0])
                             {
                                 pos.Add(i);
+                                _guessedLetters[i] = true;
 
                             }
                         }
@@ -103,32 +126,46 @@ namespace HangmanServer
                     {
                         _attemptsLeft -= 2;
                     }
-                }
+                }/////////FINISH VERIFYING GUESS
 
+
+
+                ///////START CHECKING NEXT STEP OF THE GAME
                 if (_attemptsLeft <= 0)//if attempts left are gone
                 {
-                    foreach (Player p in _guessers)
+                    foreach (Player p in _guessers)//notifies all guessers that the game is over and word picker won
                     {
-                        p.Context.endGame(new string[] { _wordPicker.Username }, _gameWord); //notifies all guessers that the game is over and word picker won
+                        p.Context.endGame(new string[] { _wordPicker.Username }, _gameWord); 
+                        p.Game = null;
                     }
                     _wordPicker.Context.endGame(new string[] { _wordPicker.Username }, _gameWord); //notify word picker that the game is over and word picker won
+                    _wordPicker.Game = null;
+                    _server.ListOfGames.Remove(this);//ends game
+                    _server.updatePortalList();//updates portal list
                 }
                 else //if there are more attempts left
                 {
-                    foreach (Player p in _guessers)
+                    foreach (Player p in _guessers) //notifies all guessers about the guess result (either word or letter guess)
                     {
-                        p.Context.receiveResult(guess, isRight, pos.ToArray()); //notifies all guessers about the guess result (either word or letter guess)
-                        if (guess.Count() > 1 && isRight)
+                        p.Context.receiveResult(guess, isRight, pos.ToArray());
+                        p.Context.receiveMessage("Hangman: The guess " + guess.ToUpper() + " was " + ((isRight) ? "correct." : "wrong."));
+                        if ((guess.Count() > 1 && isRight) || !_guessedLetters.Contains(false))//in case someone correctly guessed the word, notifies each guesser that the game is over
                         {
-                            p.Context.endGame(_guessersNames, _gameWord); //in case someone correctly guessed the word, notifies all guessers that the game is over
+                            p.Game = null; //finish game for current guesser
+                            p.Context.endGame(_guessersNames, _gameWord); 
                         }
                     }
+
                     _wordPicker.Context.receiveResult(guess, isRight, pos.ToArray()); //notify word picker about the guess result
-                    if (guess.Count() > 1 && isRight)//in case someone correctly guessed the word, notifies word picker that the game is over 
+                    _wordPicker.Context.receiveMessage("Hangman: The guess " + guess.ToUpper() + " was " + ((isRight) ? "correct." : "wrong."));
+                    if ((guess.Count() > 1 && isRight) || !_guessedLetters.Contains(false))//in case guessers win, notifies word picker that the game is over 
                     {
-                        _wordPicker.Context.endGame(_guessersNames, _gameWord); //notifies all guessers that the game is over in case someone correctly guessed the word
+                        _wordPicker.Game = null; //finish game for word picker
+                        _wordPicker.Context.endGame(_guessersNames, _gameWord); //in case someone correctly guessed the word, notifies word picker that the game is over
+                        _server.ListOfGames.Remove(this);//ends game
+                        _server.updatePortalList(); //updates list in portal
                     }
-                }
+                }///////finish CHECKING NEXT STEP OF THE GAME                
             }
             catch (Exception)
             {
@@ -136,6 +173,5 @@ namespace HangmanServer
             }
             
         }
-
     }
 }

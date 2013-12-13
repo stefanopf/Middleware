@@ -50,32 +50,59 @@ namespace HangmanClient
             gameWordLetters[7] = buttonL8;
             gameWordLetters[8] = buttonL9;
 
-            keyboardButtons[0] = buttonQ;
-            keyboardButtons[1] = buttonW;
-            keyboardButtons[2] = buttonE;
-            keyboardButtons[3] = buttonR;
-            keyboardButtons[4] = buttonT;
-            keyboardButtons[5] = buttonY;
-            keyboardButtons[6] = buttonU;
-            keyboardButtons[7] = buttonI;
-            keyboardButtons[8] = buttonO;
-            keyboardButtons[9] = buttonP;
-            keyboardButtons[10] = buttonA;
-            keyboardButtons[11] = buttonS;
-            keyboardButtons[12] = buttonD;
-            keyboardButtons[13] = buttonF;
-            keyboardButtons[14] = buttonG;
-            keyboardButtons[15] = buttonH;
-            keyboardButtons[16] = buttonJ;
-            keyboardButtons[17] = buttonK;
-            keyboardButtons[18] = buttonL;
-            keyboardButtons[19] = buttonZ;
-            keyboardButtons[20] = buttonX;
-            keyboardButtons[21] = buttonC;
-            keyboardButtons[22] = buttonV;
-            keyboardButtons[23] = buttonB;
-            keyboardButtons[24] = buttonN;
-            keyboardButtons[25] = buttonM;
+            keyboardButtons[0] = buttonA;
+            keyboardButtons[1] = buttonB;
+            keyboardButtons[2] = buttonC;
+            keyboardButtons[3] = buttonD;
+            keyboardButtons[4] = buttonE;
+            keyboardButtons[5] = buttonF;
+            keyboardButtons[6] = buttonG;
+            keyboardButtons[7] = buttonH;
+            keyboardButtons[8] = buttonI;
+            keyboardButtons[9] = buttonJ;
+            keyboardButtons[10] = buttonK;
+            keyboardButtons[11] = buttonL;
+            keyboardButtons[12] = buttonM;
+            keyboardButtons[13] = buttonN;
+            keyboardButtons[14] = buttonO;
+            keyboardButtons[15] = buttonP;
+            keyboardButtons[16] = buttonQ;
+            keyboardButtons[17] = buttonR;
+            keyboardButtons[18] = buttonS;
+            keyboardButtons[19] = buttonT;
+            keyboardButtons[20] = buttonU;
+            keyboardButtons[21] = buttonV;
+            keyboardButtons[22] = buttonW;
+            keyboardButtons[23] = buttonX;
+            keyboardButtons[24] = buttonY;
+            keyboardButtons[25] = buttonZ;
+
+            //keyboardButtons[0] = buttonQ;
+            //keyboardButtons[1] = buttonW;
+            //keyboardButtons[2] = buttonE;
+            //keyboardButtons[3] = buttonR;
+            //keyboardButtons[4] = buttonT;
+            //keyboardButtons[5] = buttonY;
+            //keyboardButtons[6] = buttonU;
+            //keyboardButtons[7] = buttonI;
+            //keyboardButtons[8] = buttonO;
+            //keyboardButtons[9] = buttonP;
+            //keyboardButtons[10] = buttonA;
+            //keyboardButtons[11] = buttonS;
+            //keyboardButtons[12] = buttonD;
+            //keyboardButtons[13] = buttonF;
+            //keyboardButtons[14] = buttonG;
+            //keyboardButtons[15] = buttonH;
+            //keyboardButtons[16] = buttonJ;
+            //keyboardButtons[17] = buttonK;
+            //keyboardButtons[18] = buttonL;
+            //keyboardButtons[19] = buttonZ;
+            //keyboardButtons[20] = buttonX;
+            //keyboardButtons[21] = buttonC;
+            //keyboardButtons[22] = buttonV;
+            //keyboardButtons[23] = buttonB;
+            //keyboardButtons[24] = buttonN;
+            //keyboardButtons[25] = buttonM;
 
             labelAttemptsValue.Text = _atteptsLeft.ToString();
 
@@ -83,18 +110,15 @@ namespace HangmanClient
         
         public void startNewGame(string[] guessers, string wordPicker, int[] wordRange, int id) 
         {
-            string[] players = new string[guessers.Length + 1];
-            players[0] = wordPicker;
-
-            for (int i = 1; i < guessers.Length; i++)
+            listBoxGamePlayersList.Items.Add("-*" + wordPicker + "*-");//insert player names in the list
+            for (int i = 0; i < guessers.Length; i++)
             {
-                players[i] = guessers[i];
+                listBoxGamePlayersList.Items.Add(guessers[i]);
             }
 
-            listBoxGamePlayersList.DataSource = guessers;
             _gameId = id;
 
-            for (int i = 0; i < keyboardButtons.Length; i++)
+            for (int i = 0; i < keyboardButtons.Length; i++)//enable virtual keyboard buttons
             {
                 keyboardButtons[i].Enabled = true;
             }
@@ -102,25 +126,36 @@ namespace HangmanClient
             {
                 gameWordLetters[i].Text = "";
             }
-            if (wordPicker == _username)
-            {
-                labelWaiting.Text = "Your are the Word Picker\nChoose a word beetween " + wordRange[0] + " and " + wordRange[1] + " letters:";
-                textBoxChooseGameWord.Visible = true;
-                buttonChooseGameWord.Visible = true;
-                textBoxChooseGameWord.MaxLength = wordRange[1];
+            if (wordPicker == _username)//if user is the word picker
+            {                
                 try
                 {
+                    labelWaiting.Text = "Your are the Word Picker\nChoose a word beetween " + wordRange[0] + " and " + wordRange[1] + " letters:";
+                    textBoxChooseGameWord.Visible = true;
+                    buttonChooseGameWord.Visible = true;
+                    textBoxWordGuess.Enabled = false;
+                    textBoxWordGuess.Text = "   WORD PICKER";
+                    buttonGuessWord.Enabled = false;
+                    textBoxChooseGameWord.MaxLength = wordRange[1];
+
                     foreach (Button letter in keyboardButtons)
                         letter.Click -= letterGuess_click;
-                    buttonGuessWord.Click -= buttonGuessWord_Click;
+
                 }
                 catch { }
             }
-            else 
+            else //if user is a guesser
             {
-                foreach (Button letter in keyboardButtons)
-                    letter.Click += letterGuess_click;
-                buttonGuessWord.Click += buttonGuessWord_Click;
+                try
+                {
+                    textBoxWordGuess.Enabled = true;
+                    textBoxWordGuess.Text = "";
+                    buttonGuessWord.Enabled = true;
+
+                    foreach (Button letter in keyboardButtons)
+                        letter.Click += letterGuess_click;
+                }
+                catch { }
             }
         }
 
@@ -170,7 +205,7 @@ namespace HangmanClient
                     for (int i = 0; i < positions.Length; i++)
                     {
                         gameWordLetters[positions[i]].Text = guess;
-                    }
+                    }                    
                 }
                 if (guess.Length > 1)//if guess is a word
                 {
@@ -187,10 +222,9 @@ namespace HangmanClient
                     _atteptsLeft--;
                 _atteptsLeft--;
                 labelAttemptsValue.Text = _atteptsLeft.ToString();
-                listBoxChat.Items.Add("The guess\"" + guess + "\" was wrong");
-                if (listBoxChat.Items.Count > 6)
-                    listBoxChat.ScrollAlwaysVisible = true;
             }
+            int idx = ((int)(guess.ToUpper().ToCharArray()[0]) - 'A');
+            keyboardButtons[idx].Enabled = false;
         }
 
         public void endGame(string[] winners, string gameWord)
@@ -219,6 +253,10 @@ namespace HangmanClient
 
         public void receiveMessage(string message)
         {
+            if(textBoxChat.Text=="")
+                textBoxChat.Text = textBoxChat.Text +  message;
+            else
+                textBoxChat.Text = textBoxChat.Text + "\r\n" + message;
         }
 
         public void receiveInvitation(string inviter, int invitees, int id)
@@ -241,12 +279,14 @@ namespace HangmanClient
         {
             if (confirmation == true)
             {
+                this._username = textBoxUserName.Text;
                 displayPortal();
             }
             else
             {
                 MessageBox.Show("Incorrect username or password");
                 buttonRegister.Text = "Register";
+                displayLogin();
             }
             buttonLogin.Text = "Login";
             textBoxUserName.Enabled = false;
@@ -319,18 +359,23 @@ namespace HangmanClient
         
         private void buttonGuessWord_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                proxy.guessWord(textBoxWordGuess.Text, _username, _gameId);
+                textBoxWordGuess.Text = "";
+            }
+            catch { }
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                buttonLogin.Text = "Logging\nin...";
+                buttonLogin.Text = "Logging\r\nin...";
                 textBoxUserName.Enabled = false;
                 textBoxPassword.Enabled = false;
+                Invalidate();
                 proxy.login(textBoxUserName.Text, textBoxPassword.Text);
-                this._username = textBoxUserName.Text;
             }
             catch
             {
@@ -346,13 +391,14 @@ namespace HangmanClient
             try
             {
                 buttonRegister.Text = "Registering...";
+                textBoxUserName.Enabled = false;
+                textBoxPassword.Enabled = false;
+                Invalidate();
                 string s = "";
 
                 if (textBoxUserName.Text.Length >=3 && textBoxUserName.Text.Length <=20
                     && textBoxPassword.Text.Length >= 5 && textBoxPassword.Text.Length <=20)
                 {
-                    textBoxUserName.Enabled = false;
-                    textBoxPassword.Enabled = false;
                     if (proxy.register(textBoxUserName.Text, textBoxPassword.Text))
                     {
                         s+="Registration successful!";
@@ -409,13 +455,22 @@ namespace HangmanClient
             {
                 usernames.Add(selectedItem.Text);
             }
-            proxy.invitePlayers(usernames.ToArray(), _username);
-            displayWaiting();
+            if (usernames.Count != 0)
+            {
+                proxy.invitePlayers(usernames.ToArray(), _username);
+                displayWaiting();
+            }
         }
 
         private void buttonChooseGameWord_Click(object sender, EventArgs e)
         {
             proxy.chooseGameWord(textBoxChooseGameWord.Text, _username, _gameId);
+        }
+
+        private void buttonSend_Click(object sender, EventArgs e)
+        {
+            proxy.chat(textBoxSendMessage.Text,_username,_gameId);
+            textBoxSendMessage.Text = "";
         }
 
     }

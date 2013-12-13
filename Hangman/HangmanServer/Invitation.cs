@@ -51,6 +51,7 @@ namespace HangmanServer
             }
             foreach (Player p in invitedPlayers)
             {
+                p.Invitation = this;
                 p.Context.receiveInvitation(inviter.Username, invitedPlayers.Count, id);
             }
         }
@@ -76,7 +77,11 @@ namespace HangmanServer
                 int n = new Random().Next()%playersWhoAccepted.Count;
                 Player wordPicker = playersWhoAccepted.ElementAt(n);
                 playersWhoAccepted.RemoveAt(n);
+                foreach (Player p in InvitedPlayers)
+                    p.Invitation = null;
+                Inviter.Invitation = null;
                 _server.ListOfGames.Add(new Game(_id, playersWhoAccepted, wordPicker,_server));
+                _server.ListOfInvitations.Remove(this);
             }
             catch
             {

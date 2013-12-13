@@ -73,7 +73,6 @@
             this.labelPassword = new System.Windows.Forms.Label();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.listBoxGamePlayersList = new System.Windows.Forms.ListBox();
-            this.listBoxChat = new System.Windows.Forms.ListBox();
             this.textBoxWordGuess = new System.Windows.Forms.TextBox();
             this.buttonGuessWord = new System.Windows.Forms.Button();
             this.buttonSend = new System.Windows.Forms.Button();
@@ -91,9 +90,10 @@
             this.labelYourStats = new System.Windows.Forms.Label();
             this.labelPlayerName = new System.Windows.Forms.Label();
             this.panelWaiting = new System.Windows.Forms.Panel();
-            this.labelWaiting = new System.Windows.Forms.Label();
-            this.textBoxChooseGameWord = new System.Windows.Forms.TextBox();
             this.buttonChooseGameWord = new System.Windows.Forms.Button();
+            this.textBoxChooseGameWord = new System.Windows.Forms.TextBox();
+            this.labelWaiting = new System.Windows.Forms.Label();
+            this.textBoxChat = new System.Windows.Forms.TextBox();
             this.panelLogin.SuspendLayout();
             this.panelGamePlay.SuspendLayout();
             this.panelPortal.SuspendLayout();
@@ -628,18 +628,8 @@
             this.listBoxGamePlayersList.MultiColumn = true;
             this.listBoxGamePlayersList.Name = "listBoxGamePlayersList";
             this.listBoxGamePlayersList.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.listBoxGamePlayersList.Size = new System.Drawing.Size(162, 121);
+            this.listBoxGamePlayersList.Size = new System.Drawing.Size(285, 121);
             this.listBoxGamePlayersList.TabIndex = 45;
-            // 
-            // listBoxChat
-            // 
-            this.listBoxChat.BackColor = System.Drawing.SystemColors.Control;
-            this.listBoxChat.FormattingEnabled = true;
-            this.listBoxChat.Location = new System.Drawing.Point(494, 149);
-            this.listBoxChat.Name = "listBoxChat";
-            this.listBoxChat.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.listBoxChat.Size = new System.Drawing.Size(162, 134);
-            this.listBoxChat.TabIndex = 46;
             // 
             // textBoxWordGuess
             // 
@@ -660,22 +650,24 @@
             this.buttonGuessWord.TabIndex = 49;
             this.buttonGuessWord.Text = "Guess Word";
             this.buttonGuessWord.UseVisualStyleBackColor = true;
+            this.buttonGuessWord.Click += new System.EventHandler(this.buttonGuessWord_Click);
             // 
             // buttonSend
             // 
             this.buttonSend.Location = new System.Drawing.Point(494, 349);
             this.buttonSend.Name = "buttonSend";
-            this.buttonSend.Size = new System.Drawing.Size(162, 23);
+            this.buttonSend.Size = new System.Drawing.Size(285, 23);
             this.buttonSend.TabIndex = 51;
             this.buttonSend.Text = "Send";
             this.buttonSend.UseVisualStyleBackColor = true;
+            this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
             // 
             // textBoxSendMessage
             // 
             this.textBoxSendMessage.Location = new System.Drawing.Point(494, 292);
             this.textBoxSendMessage.Multiline = true;
             this.textBoxSendMessage.Name = "textBoxSendMessage";
-            this.textBoxSendMessage.Size = new System.Drawing.Size(162, 51);
+            this.textBoxSendMessage.Size = new System.Drawing.Size(285, 51);
             this.textBoxSendMessage.TabIndex = 50;
             // 
             // labelGamePlayersList
@@ -715,6 +707,7 @@
             // 
             // panelGamePlay
             // 
+            this.panelGamePlay.Controls.Add(this.textBoxChat);
             this.panelGamePlay.Controls.Add(this.textBoxSendMessage);
             this.panelGamePlay.Controls.Add(this.labelGamePlayersList);
             this.panelGamePlay.Controls.Add(this.buttonNewGame);
@@ -724,7 +717,6 @@
             this.panelGamePlay.Controls.Add(this.labelAttemptsValue);
             this.panelGamePlay.Controls.Add(this.textBoxWordGuess);
             this.panelGamePlay.Controls.Add(this.buttonQ);
-            this.panelGamePlay.Controls.Add(this.listBoxChat);
             this.panelGamePlay.Controls.Add(this.buttonW);
             this.panelGamePlay.Controls.Add(this.listBoxGamePlayersList);
             this.panelGamePlay.Controls.Add(this.buttonE);
@@ -762,7 +754,7 @@
             this.panelGamePlay.Controls.Add(this.buttonB);
             this.panelGamePlay.Location = new System.Drawing.Point(7, 249);
             this.panelGamePlay.Name = "panelGamePlay";
-            this.panelGamePlay.Size = new System.Drawing.Size(679, 383);
+            this.panelGamePlay.Size = new System.Drawing.Size(792, 383);
             this.panelGamePlay.TabIndex = 55;
             this.panelGamePlay.Visible = false;
             // 
@@ -851,32 +843,13 @@
             this.panelWaiting.Controls.Add(this.labelWaiting);
             this.panelWaiting.Location = new System.Drawing.Point(477, 25);
             this.panelWaiting.Name = "panelWaiting";
-            this.panelWaiting.Size = new System.Drawing.Size(209, 138);
+            this.panelWaiting.Size = new System.Drawing.Size(227, 138);
             this.panelWaiting.TabIndex = 57;
             this.panelWaiting.Visible = false;
             // 
-            // labelWaiting
-            // 
-            this.labelWaiting.AutoSize = true;
-            this.labelWaiting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelWaiting.Location = new System.Drawing.Point(11, 20);
-            this.labelWaiting.Name = "labelWaiting";
-            this.labelWaiting.Size = new System.Drawing.Size(161, 16);
-            this.labelWaiting.TabIndex = 0;
-            this.labelWaiting.Text = "Waiting for other players...";
-            // 
-            // textBoxChooseGameWord
-            // 
-            this.textBoxChooseGameWord.Location = new System.Drawing.Point(24, 73);
-            this.textBoxChooseGameWord.MaxLength = 20;
-            this.textBoxChooseGameWord.Name = "textBoxChooseGameWord";
-            this.textBoxChooseGameWord.Size = new System.Drawing.Size(151, 20);
-            this.textBoxChooseGameWord.TabIndex = 58;
-            this.textBoxChooseGameWord.Visible = false;
-            // 
             // buttonChooseGameWord
             // 
-            this.buttonChooseGameWord.Location = new System.Drawing.Point(66, 99);
+            this.buttonChooseGameWord.Location = new System.Drawing.Point(77, 99);
             this.buttonChooseGameWord.Name = "buttonChooseGameWord";
             this.buttonChooseGameWord.Size = new System.Drawing.Size(75, 23);
             this.buttonChooseGameWord.TabIndex = 59;
@@ -885,16 +858,47 @@
             this.buttonChooseGameWord.Visible = false;
             this.buttonChooseGameWord.Click += new System.EventHandler(this.buttonChooseGameWord_Click);
             // 
+            // textBoxChooseGameWord
+            // 
+            this.textBoxChooseGameWord.Location = new System.Drawing.Point(35, 73);
+            this.textBoxChooseGameWord.MaxLength = 20;
+            this.textBoxChooseGameWord.Name = "textBoxChooseGameWord";
+            this.textBoxChooseGameWord.Size = new System.Drawing.Size(151, 20);
+            this.textBoxChooseGameWord.TabIndex = 58;
+            this.textBoxChooseGameWord.Visible = false;
+            // 
+            // labelWaiting
+            // 
+            this.labelWaiting.AutoSize = true;
+            this.labelWaiting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWaiting.Location = new System.Drawing.Point(12, 5);
+            this.labelWaiting.Name = "labelWaiting";
+            this.labelWaiting.Size = new System.Drawing.Size(161, 16);
+            this.labelWaiting.TabIndex = 0;
+            this.labelWaiting.Text = "Waiting for other players...";
+            this.labelWaiting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxChat
+            // 
+            this.textBoxChat.AcceptsReturn = true;
+            this.textBoxChat.Location = new System.Drawing.Point(494, 150);
+            this.textBoxChat.Multiline = true;
+            this.textBoxChat.Name = "textBoxChat";
+            this.textBoxChat.ReadOnly = true;
+            this.textBoxChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxChat.Size = new System.Drawing.Size(285, 136);
+            this.textBoxChat.TabIndex = 53;
+            // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1246, 638);
+            this.ClientSize = new System.Drawing.Size(1101, 638);
+            this.Controls.Add(this.panelGamePlay);
             this.Controls.Add(this.panelWaiting);
             this.Controls.Add(this.panelPortal);
-            this.Controls.Add(this.panelGamePlay);
             this.Controls.Add(this.panelLogin);
             this.MaximizeBox = false;
             this.Name = "ClientForm";
@@ -958,7 +962,6 @@
         private System.Windows.Forms.Label labelPassword;
         private System.Windows.Forms.Button buttonLogin;
         private System.Windows.Forms.ListBox listBoxGamePlayersList;
-        private System.Windows.Forms.ListBox listBoxChat;
         private System.Windows.Forms.TextBox textBoxWordGuess;
         private System.Windows.Forms.Button buttonGuessWord;
         private System.Windows.Forms.Button buttonSend;
@@ -979,6 +982,7 @@
         private System.Windows.Forms.Button buttonChooseGameWord;
         private System.Windows.Forms.TextBox textBoxChooseGameWord;
         private System.Windows.Forms.Label labelWaiting;
+        private System.Windows.Forms.TextBox textBoxChat;
     }
 }
 

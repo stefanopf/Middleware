@@ -12,41 +12,42 @@ namespace HangmanServer
         private delegate void listChanged(string[] players, string[] correctGuesses, string[] totalGuesses);
         private event listChanged listHasChanged;
 
-        private static List<Player> listOfPlayers;//this is our database
-        private static List<Invitation> listOfInvitations = new List<Invitation>();
-        private static List<Game> listOfGames = new List<Game>();
+        private static List<Player> _listOfPlayers;//this is our database
+        private static List<Invitation> _listOfInvitations = new List<Invitation>();
+        private static List<Game> _listOfGames = new List<Game>();
        // private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
         private int count = 0;
 
         public List<Game> ListOfGames 
         {
-            get { return listOfGames; } 
+            get { return _listOfGames; } 
+        }
+
+        public List<Invitation> ListOfInvitations
+        {
+            get { return _listOfInvitations; }
         }
 
         public Server() 
         {
-            if(listOfPlayers==null)
-                listOfPlayers = new List<Player>();
+            if(_listOfPlayers==null)
+                _listOfPlayers = new List<Player>();
         }
 
         public void login(string username, string password) 
         {
             IHangmanCallBack context = (IHangmanCallBack)OperationContext.Current.GetCallbackChannel<IHangmanCallBack>();
+            Player player=null;
             try
             {
-                Player player = listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower() && p.Password == password);//tries to find a player whose name and password match
+                player = _listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower() && p.Password == password);//tries to find a player whose name and password match
                 player.Context = context;
                 player.IsOnline = true;
-                string [] usernames = ((List<string>)getOnlinePlayersList()[0]).ToArray();
-                string [] totalGuesses = getOnlinePlayersList()[1].ToArray();
-                string[] correctGuesses = getOnlinePlayersList()[2].ToArray();
-
+                player.Game = null;
+                player.Invitation = null;
                 player.Context.loginConfirmation(true);
-
                 listHasChanged += player.Context.updatePlayersList;
-                listHasChanged( usernames, correctGuesses, totalGuesses);
-
-                //return new object[] { usernames, totalGuesses, correctGuesses };
+                updatePortalList();
             }
             catch
             {
@@ -58,9 +59,10 @@ namespace HangmanServer
         {
             try
             {
-                Player player = listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower());//tries to find a player whose name matches
+                Player player = _listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower());//tries to find a player whose name matches
                 player.IsOnline = false;
-                string[] usernames = ((List<string>)getOnlinePlayersList()[0]).ToArray();
+                player.Context = null;
+                string[] usernames = ((List<string>)getAvailablePlayersList()[0]).ToArray();
                 string[] totalGuesses = getOnlinePlayersList()[1].ToArray();
                 string[] correctGuesses = getOnlinePlayersList()[2].ToArray();
 
@@ -79,9 +81,9 @@ namespace HangmanServer
         {
             try
             {
-                if (listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower()) == null) //if couldnt find player whose name is "username"
+                if (_listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower()) == null) //if couldnt find player whose name is "username"
                 {
-                    listOfPlayers.Add(new Player(username, password));
+                    _listOfPlayers.Add(new Player(username, password));
                     return true;
                 }
                 return false;
@@ -95,12 +97,12 @@ namespace HangmanServer
         public void invitePlayers(string[] invitedPlayerNames, string username) //invites players to a game
         {
             List<Player> invitedPlayers = new List<Player>();
-            Player inviter = listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower());
+            Player inviter = _listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower());
             for (int i = 0; i < invitedPlayerNames.Count<string>(); i++)
             {
                 try
                 {
-                    Player plr = listOfPlayers.Find(p => p.Username.ToLower() == invitedPlayerNames[i].ToLower());
+                    Player plr = _listOfPlayers.Find(p => p.Username.ToLower() == invitedPlayerNames[i].ToLower());
                     if(plr.IsOnline && plr.Game == null)
                         invitedPlayers.Add(plr);
                     else
@@ -111,10 +113,11 @@ namespace HangmanServer
                     Console.WriteLine("Could not find \""+invitedPlayerNames[i] +"\" in the players list");
                     return;
                 }
-            }
-            Server s = this;
-            Invitation inv = new Invitation(invitedPlayers, inviter, count, 15000, s);
-            listOfInvitations.Add(inv);
+            }            
+            Invitation inv = new Invitation(invitedPlayers, inviter, count, 15000, this);
+            _listOfInvitations.Add(inv);
+            inviter.Invitation = inv;
+            updatePortalList();
             count++;
         }
         
@@ -122,8 +125,10 @@ namespace HangmanServer
         {
             try
             {
-                Invitation inv = listOfInvitations.Find(i => i.Id == id);
+                Invitation inv = _listOfInvitations.Find(i => i.Id == id);
                 inv.acceptInvitation(username,userAccepted);
+                if(userAccepted)
+                    updatePortalList();
             }
             catch
             {
@@ -135,7 +140,7 @@ namespace HangmanServer
         {
             try
             {
-                listOfGames.Find(g => g.Id == id).setGameWord(gameWord, username);
+                _listOfGames.Find(g => g.Id == id).setGameWord(gameWord, username);
 
             }
             catch
@@ -148,7 +153,7 @@ namespace HangmanServer
         {
             try
             {
-                listOfGames.Find(g => g.Id == id).guess(letter, username);
+                _listOfGames.Find(g => g.Id == id).guess(letter, username);
 
             }
             catch 
@@ -161,7 +166,7 @@ namespace HangmanServer
         {
             try
             {
-                listOfGames.Find(g => g.Id == id).guess(word, username);
+                _listOfGames.Find(g => g.Id == id).guess(word, username);
 
             }
             catch
@@ -172,17 +177,35 @@ namespace HangmanServer
 
         public void timeUp(string username, int id) { }
 
-        public void chat(string message, string username, int id) { }
+        public void chat(string message, string username, int id) 
+        {
+            try
+            {
+                Game game = _listOfGames.Find(g => g.Id == id);
+                foreach (Player p in game.Guessers)
+                {
+                    p.Context.receiveMessage(username + ":  " + message);
+                }
+                game.WordPicker.Context.receiveMessage(username + ":  " + message);
+
+            }
+            catch 
+            {
+                
+                throw;
+            }
+        }
 
         public void leaveGame(string username, int id) 
         {
             try//tries to find a player whose name matches
             {
-                Player player = listOfPlayers.Find(p => p.Username == username);
+                Player player = _listOfPlayers.Find(p => p.Username == username);
                 player.Game = null;
                 player.Invitation = null;
                 player.Context = null;
                 player.IsOnline = false;
+                updatePortalList();
             }
             catch
             {
@@ -190,33 +213,79 @@ namespace HangmanServer
             }
         }
 
+        public void updatePortalList()
+        {
+
+            string[] usernames = ((List<string>)getAvailablePlayersList()[0]).ToArray();
+            string[] totalGuesses = getOnlinePlayersList()[1].ToArray();
+            string[] correctGuesses = getOnlinePlayersList()[2].ToArray();
+
+            listHasChanged(usernames, correctGuesses, totalGuesses);
+        }
+
         public static List<List<string>> getOnlinePlayersList()
         {
-            List<string> userNames = new List<string>();//0 = username
-            List<string> totalGuesses = new List<string>();//1 = total guesses
-            List<string> correctGuesses = new List<string>();//2 = correct guesses
-            List<string> gameIDs = new List<string>();
-            List<List<string>> returnList = new List<List<string>>();
-
-            foreach (Player p in listOfPlayers)
+            try
             {
-                if (p.IsOnline)
-                {
-                    userNames.Add(p.Username);
-                    totalGuesses.Add(p.TotalGuesses.ToString());
-                    correctGuesses.Add(p.CorrectGuesses.ToString());
-                    if (p.Game != null)
-                        gameIDs.Add(p.Game.Id.ToString());
-                    else
-                        gameIDs.Add("-");
-                }
-            }
-            returnList.Add(userNames);
-            returnList.Add(totalGuesses);
-            returnList.Add(correctGuesses);
-            returnList.Add(gameIDs);
+                List<string> userNames = new List<string>();//0 = username
+                List<string> totalGuesses = new List<string>();//1 = total guesses
+                List<string> correctGuesses = new List<string>();//2 = correct guesses
+                List<string> gameIDs = new List<string>();      //3 = ids
 
-            return returnList;
+                List<List<string>> returnList = new List<List<string>>();
+
+                foreach (Player p in _listOfPlayers)
+                {
+                    if (p.IsOnline)
+                    {
+                        userNames.Add(p.Username);
+                        totalGuesses.Add(p.TotalGuesses.ToString());
+                        correctGuesses.Add(p.CorrectGuesses.ToString());
+                        if (p.Game != null)
+                            gameIDs.Add(p.Game.Id.ToString());
+                        else
+                            gameIDs.Add("-");
+                    }
+                }
+                returnList.Add(userNames);
+                returnList.Add(totalGuesses);
+                returnList.Add(correctGuesses);
+                returnList.Add(gameIDs);
+
+                return returnList;
+            }
+            catch { return null; }
+        }
+
+        private List<List<string>> getAvailablePlayersList()
+        {
+            try
+            {
+                List<string> userNames = new List<string>();//0 = username
+                List<string> totalGuesses = new List<string>();//1 = total guesses
+                List<string> correctGuesses = new List<string>();//2 = correct guesses
+
+                List<List<string>> returnList = new List<List<string>>();
+
+                foreach (Player p in _listOfPlayers)
+                {
+                    if (p.IsOnline && p.Game == null && p.Invitation == null)
+                    {
+                        userNames.Add(p.Username);
+                        totalGuesses.Add(p.TotalGuesses.ToString());
+                        correctGuesses.Add(p.CorrectGuesses.ToString());
+                    }
+                }
+                returnList.Add(userNames);
+                returnList.Add(totalGuesses);
+                returnList.Add(correctGuesses);
+
+                return returnList;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
     }
