@@ -52,7 +52,26 @@ namespace HangmanServer
             }
         }
 
-        
+        public void logout(string username)
+        {
+            try
+            {
+                Player player = listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower());//tries to find a player whose name matches
+                player.IsOnline = false;
+                string[] usernames = ((List<string>)getOnlinePlayersList()[0]).ToArray();
+                string[] totalGuesses = getOnlinePlayersList()[1].ToArray();
+                string[] correctGuesses = getOnlinePlayersList()[2].ToArray();
+
+                listHasChanged -= player.Context.updatePlayersList;
+                listHasChanged(usernames, correctGuesses, totalGuesses);
+
+                //return new object[] { usernames, totalGuesses, correctGuesses };
+            }
+            catch
+            {
+                Console.WriteLine("Problems logging out \""+username+"\".");
+            }
+        }
 
         public bool register(string username, string password)
         {

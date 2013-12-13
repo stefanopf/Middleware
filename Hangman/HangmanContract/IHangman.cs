@@ -13,6 +13,9 @@ namespace HangmanContract
         [OperationContract(IsOneWay=true)]
         void login(string username, string password);
 
+        [OperationContract(IsOneWay = true)]
+        void logout(string username);
+
         [OperationContract]
         bool register(string username, string password);
 

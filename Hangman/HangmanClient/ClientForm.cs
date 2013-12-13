@@ -19,10 +19,16 @@ namespace HangmanClient
 
         public ClientForm()
         {
-            proxy = new HangmanContract.HangmanClient(new InstanceContext(this)); //establish connection with server
-            this.Shown+=ClientForm_Shown;        
-
+            proxy = new HangmanContract.HangmanClient(new InstanceContext(this)); //creates instance of the server
+            this.Shown+=ClientForm_Shown;
+            this.FormClosing += OnFormClosing;
             InitializeComponent();
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(state!=0)
+                proxy.logout(username);
         }
 
         private void ClientForm_Shown(Object sender, EventArgs e)
@@ -172,7 +178,15 @@ namespace HangmanClient
 
         public void receiveInvitation(string inviter, int invitees)
         {
-            MessageBox.Show("You have received an invitation for a game with " + invitees + " other players.");
+            if (MessageBox.Show(inviter + "has invited you to start a game with other " + invitees + " players", "New game invitation", MessageBoxButtons.YesNoCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                proxy.acceptInvitation(true);
+            }
+            else
+            {
+                proxy.acceptInvitation(false);
+            }
+
         }
 
         public void loginConfirmation(bool confirmation)

@@ -10,6 +10,9 @@
   <wsdl:message name="IHangman_login_InputMessage">
     <wsdl:part name="parameters" element="tns:login" />
   </wsdl:message>
+  <wsdl:message name="IHangman_logout_InputMessage">
+    <wsdl:part name="parameters" element="tns:logout" />
+  </wsdl:message>
   <wsdl:message name="IHangman_register_InputMessage">
     <wsdl:part name="parameters" element="tns:register" />
   </wsdl:message>
@@ -67,6 +70,9 @@
   <wsdl:portType name="IHangman">
     <wsdl:operation name="login">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/login" message="tns:IHangman_login_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input wsaw:Action="HangmanContract/IHangman/logout" message="tns:IHangman_logout_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="register">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/register" message="tns:IHangman_register_InputMessage" />

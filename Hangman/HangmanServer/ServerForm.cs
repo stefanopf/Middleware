@@ -21,7 +21,14 @@ namespace HangmanServer
         {
             t.Interval = 1000;
             t.Tick += updateScreen;
+            this.FormClosing += ServerForm_OnClose;
             InitializeComponent();
+        }
+
+        private void ServerForm_OnClose(object sender, FormClosingEventArgs e)
+        {
+            if (serverIsOn)
+                host.Close();
         }
 
         private void updateScreen(object sender, EventArgs e)
@@ -47,13 +54,6 @@ namespace HangmanServer
             }
         }
 
-        private void ServerForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-            if(serverIsOn)
-                host.Close();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (serverIsOn)
@@ -62,6 +62,9 @@ namespace HangmanServer
                // labelMessage.Text = ServerInfo.saveDataBase();
                 labelStatus.Text = "Server is Off";
                 button1.Text = "Turn on Server";
+                listView1.Visible = false;
+                labelPos2.Visible = false;
+                listView1.Invalidate();
                 t.Stop();
             }
             else
@@ -71,6 +74,9 @@ namespace HangmanServer
                 host.Open();
                 labelStatus.Text = "Server is On";
                 button1.Text = "Turn off Server";
+                listView1.Visible = true;
+                labelPos2.Visible = true;
+                Invalidate();
                 t.Start();
             }
             serverIsOn = !serverIsOn;

@@ -50,10 +50,7 @@ namespace HangmanServer
 
         private void timeOut(object sender, ElapsedEventArgs e)
         {
-
-
-
- 	        throw new NotImplementedException();
+ 	       // throw new NotImplementedException();
         }
 
 

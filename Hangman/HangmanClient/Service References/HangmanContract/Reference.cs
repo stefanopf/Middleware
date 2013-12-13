@@ -21,6 +21,12 @@ namespace HangmanClient.HangmanContract {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/login")]
         System.Threading.Tasks.Task loginAsync(string username, string password);
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/logout")]
+        void logout(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/logout")]
+        System.Threading.Tasks.Task logoutAsync(string username);
+        
         [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/register", ReplyAction="HangmanContract/IHangman/registerResponse")]
         bool register(string username, string password);
         
@@ -138,6 +144,14 @@ namespace HangmanClient.HangmanContract {
         
         public System.Threading.Tasks.Task loginAsync(string username, string password) {
             return base.Channel.loginAsync(username, password);
+        }
+        
+        public void logout(string username) {
+            base.Channel.logout(username);
+        }
+        
+        public System.Threading.Tasks.Task logoutAsync(string username) {
+            return base.Channel.logoutAsync(username);
         }
         
         public bool register(string username, string password) {
