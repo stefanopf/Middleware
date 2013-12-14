@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.ServiceModel;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace HangmanClient
 {
     public partial class ClientForm : Form, HangmanContract.IHangmanCallback
@@ -130,7 +132,7 @@ namespace HangmanClient
             {                
                 try
                 {
-                    labelWaiting.Text = "Your are the Word Picker\nChoose a word beetween " + wordRange[0] + " and " + wordRange[1] + " letters:";
+                    labelWaiting.Text = "Your are the Word Picker\nChoose a word beetween:\n " + wordRange[0] + " and " + wordRange[1] + " letters:";
                     textBoxChooseGameWord.Visible = true;
                     buttonChooseGameWord.Visible = true;
                     textBoxWordGuess.Enabled = false;
@@ -253,25 +255,49 @@ namespace HangmanClient
 
         public void receiveMessage(string message)
         {
-            if(textBoxChat.Text=="")
-                textBoxChat.Text = textBoxChat.Text +  message;
-            else
-                textBoxChat.Text = textBoxChat.Text + "\r\n" + message;
+            if (message != null && message != "")
+            {
+
+                if (textBoxChat.Text == "")
+                    textBoxChat.Text = textBoxChat.Text + message;
+                else
+                    textBoxChat.Text = textBoxChat.Text + "\r\n" + message;
+            }
+            if(message== null)
+            {
+                MessageBox.Show("Nobody accepted your invitation");
+                displayPortal();
+            }
         }
 
         public void receiveInvitation(string inviter, int invitees, int id)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
+
             if (
                 MessageBox.Show(inviter + " has invited you to start a game with him\nand other " + (invitees-1) + " players", "New game invitation (ID = "+id+")", MessageBoxButtons.YesNo) 
                 == System.Windows.Forms.DialogResult.Yes)
             {
-                proxy.acceptInvitation(_username, true,id);
-                displayWaiting();
+                stopwatch.Stop();
+                if (stopwatch.Elapsed.TotalSeconds > 18)//if user waited for more than 18 after start of invitation
+                {
+                    MessageBox.Show("Invitation timed out");
+                    displayPortal();
+                }
+                else//if user responded before 18 seconds
+                {
+                    displayWaiting();
+                    proxy.acceptInvitation(_username, true, id);
+                }
             }
             else
             {
+                stopwatch.Stop();
                 proxy.acceptInvitation(_username, false,id);
             }
+            
 
         }
 
@@ -300,6 +326,7 @@ namespace HangmanClient
             panelGamePlay.Visible = false;
             panelWaiting.Visible = false;
             panelLogin.Visible = true;
+            _gameId = -1;
             _state = 0;
         }
 
@@ -312,6 +339,7 @@ namespace HangmanClient
             panelWaiting.Visible = false;
             panelPortal.Location = new Point(0, 0);
             _state = 1;
+            _gameId = -1;
 
             this.Invalidate();
         }
@@ -343,6 +371,14 @@ namespace HangmanClient
             _state = 3;
 
             this.Invalidate();
+        }
+
+        private void timer_Tick(object sender, EventArgs evt)
+        {
+            Timer t = (Timer)sender;
+            t.Stop();
+            SendKeys.Send("{ESC}"); // Sends ESC if user takes too long to accept/deny an invitation
+            displayPortal();
         }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
@@ -436,6 +472,8 @@ namespace HangmanClient
                     buttonLogin_Click(null, null);
                 }
 
+                textBoxUserName.Enabled = true;
+                textBoxPassword.Enabled = true;
                 buttonRegister.Text = "Register";
             }
             catch 

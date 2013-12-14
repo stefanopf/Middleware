@@ -27,8 +27,20 @@ namespace HangmanServer
 
         private void ServerForm_OnClose(object sender, FormClosingEventArgs e)
         {
-            if (serverIsOn)
-                host.Close();
+            try
+            {
+                if (serverIsOn)
+                {
+                    labelStatus.Text = "Closing...";
+                    labelStatus.Invalidate();
+                    labelPos1.Visible = false;
+                    labelPos2.Visible = false;
+                    listView1.Visible = false;
+                    Invalidate();
+                    host.Close();
+                }
+            }
+            catch { }
         }
 
         private void updateScreen(object sender, EventArgs e)

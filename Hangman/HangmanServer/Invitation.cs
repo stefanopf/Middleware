@@ -42,8 +42,8 @@ namespace HangmanServer
             _id = id;
             _timer.Interval = invitationTimeOut;
             _accepted = new int[invitedPlayers.Count];
-            _timer.Start();
             _timer.Elapsed += timeOut;
+            _timer.Start();
 
             for (int i = 0; i < _invitedPlayers.Count; i++)
             {
@@ -53,6 +53,7 @@ namespace HangmanServer
             {
                 p.Invitation = this;
                 p.Context.receiveInvitation(inviter.Username, invitedPlayers.Count, id);
+                server.updatePortalList();
             }
         }
 
@@ -73,15 +74,24 @@ namespace HangmanServer
                         playersWhoAccepted.Add(_invitedPlayers.ElementAt(i));
                 }
                 _timer.Stop();
-                playersWhoAccepted.Add(Inviter);
-                int n = new Random().Next()%playersWhoAccepted.Count;
-                Player wordPicker = playersWhoAccepted.ElementAt(n);
-                playersWhoAccepted.RemoveAt(n);
-                foreach (Player p in InvitedPlayers)
-                    p.Invitation = null;
-                Inviter.Invitation = null;
-                _server.ListOfGames.Add(new Game(_id, playersWhoAccepted, wordPicker,_server));
-                _server.ListOfInvitations.Remove(this);
+                if (playersWhoAccepted.Count > 0)
+                {
+                    playersWhoAccepted.Add(Inviter);
+                    int n = new Random().Next() % playersWhoAccepted.Count;
+                    Player wordPicker = playersWhoAccepted.ElementAt(n);
+                    playersWhoAccepted.RemoveAt(n);
+                    foreach (Player p in InvitedPlayers)
+                        p.Invitation = null;
+                    Inviter.Invitation = null;
+                    _server.ListOfGames.Add(new Game(_id, playersWhoAccepted, wordPicker, _server));
+                    _server.ListOfInvitations.Remove(this);
+                }
+                else
+                {
+                    _inviter.Invitation = null;
+                    _inviter.Context.receiveMessage(null);//notifies that no one accepted the game
+                    _server.updatePortalList();
+                }
             }
             catch
             {
@@ -92,7 +102,42 @@ namespace HangmanServer
 
         private void timeOut(object sender, ElapsedEventArgs e)
         {
- 	       // throw new NotImplementedException();
+            try
+            {       
+                _timer.Stop();
+                List<Player> playersWhoAccepted = new List<Player>();
+                for(int i=0;i<_invitedPlayers.Count;i++)//check which players accepted invitation
+                {
+                    if (_accepted[i] == -1)
+                        _invitedPlayers[i].Invitation = null;
+                    if (_accepted[i] == 1)
+                        playersWhoAccepted.Add(_invitedPlayers[i]);
+                }
+
+                if (playersWhoAccepted.Count > 0) //if someone accepted the invitation
+                {
+                    playersWhoAccepted.Add(Inviter);
+                    int n = new Random().Next() % playersWhoAccepted.Count;
+                    Player wordPicker = playersWhoAccepted.ElementAt(n);
+                    playersWhoAccepted.RemoveAt(n);
+                    foreach (Player p in InvitedPlayers)
+                        p.Invitation = null;
+                    Inviter.Invitation = null;
+                    _server.ListOfGames.Add(new Game(_id, playersWhoAccepted, wordPicker, _server));
+                    _server.ListOfInvitations.Remove(this);
+                }
+                else
+                {
+                    _inviter.Invitation = null;
+                    _inviter.Context.receiveMessage(null);//notifies that no one accepted the game
+                    _server.updatePortalList();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Invitation timed out and had problems starting game id= "+_id);
+                throw;
+            }
         }
 
 

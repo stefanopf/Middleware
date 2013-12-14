@@ -16,7 +16,7 @@ namespace HangmanServer
         private static List<Invitation> _listOfInvitations = new List<Invitation>();
         private static List<Game> _listOfGames = new List<Game>();
        // private string[] gameWords = { "CAT", "TABLE", "ELEPHANT", "BICYCLE", "UMBRELLA", "FONTYS" };
-        private int count = 0;
+        private int count = 0, invitationTimeOut = 20000;
 
         public List<Game> ListOfGames 
         {
@@ -65,6 +65,12 @@ namespace HangmanServer
                 string[] usernames = ((List<string>)getAvailablePlayersList()[0]).ToArray();
                 string[] totalGuesses = getOnlinePlayersList()[1].ToArray();
                 string[] correctGuesses = getOnlinePlayersList()[2].ToArray();
+
+                if (player.Invitation != null)//if player was in a game invitation, declines invitation
+                    acceptInvitation(player.Username, false, player.Invitation.Id);
+
+                if (player.Game != null)//if player was in a game invitation, takes player out of the game
+                    leaveGame(player.Username, player.Game.Id);
 
                 listHasChanged -= player.Context.updatePlayersList;
                 listHasChanged(usernames, correctGuesses, totalGuesses);
@@ -135,7 +141,7 @@ namespace HangmanServer
                 
             }
         }
-
+            
         public void chooseGameWord(string gameWord, string username, int id) 
         {
             try
@@ -222,7 +228,7 @@ namespace HangmanServer
 
             listHasChanged(usernames, correctGuesses, totalGuesses);
         }
-
+        
         public static List<List<string>> getOnlinePlayersList()
         {
             try
