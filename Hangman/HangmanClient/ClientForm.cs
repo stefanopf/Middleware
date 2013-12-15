@@ -9,7 +9,6 @@ using System.Diagnostics;
 namespace HangmanClient
 {
     public partial class ClientForm : Form, HangmanContract.IHangmanCallback
-
     {
         
         private HangmanContract.HangmanClient proxy;
@@ -112,7 +111,8 @@ namespace HangmanClient
         
         public void startNewGame(string[] guessers, string wordPicker, int[] wordRange, int id) 
         {
-            listBoxGamePlayersList.Items.Add("-*" + wordPicker + "*-");//insert player names in the list
+            listBoxGamePlayersList.Items.Clear();
+            listBoxGamePlayersList.Items.Add(wordPicker + "* - Word Chooser");//insert player names in the list
             for (int i = 0; i < guessers.Length; i++)
             {
                 listBoxGamePlayersList.Items.Add(guessers[i]);
@@ -124,7 +124,7 @@ namespace HangmanClient
             {
                 keyboardButtons[i].Enabled = true;
             }
-            for (int i = 0; i < gameWordLetters.Length; i++)
+            for (int i = 0; i < gameWordLetters.Length; i++)//clears game word
             {
                 gameWordLetters[i].Text = "";
             }
@@ -132,33 +132,25 @@ namespace HangmanClient
             {                
                 try
                 {
-                    labelWaiting.Text = "Your are the Word Picker\nChoose a word beetween:\n " + wordRange[0] + " and " + wordRange[1] + " letters:";
+                    labelWaiting.Text = "Your are the Word Picker!\nChoose a word beetween:\n " + wordRange[0] + " and " + wordRange[1] + " letters:";
                     textBoxChooseGameWord.Visible = true;
                     buttonChooseGameWord.Visible = true;
-                    textBoxWordGuess.Enabled = false;
-                    textBoxWordGuess.Text = "   WORD PICKER";
-                    buttonGuessWord.Enabled = false;
-                    textBoxChooseGameWord.MaxLength = wordRange[1];
-
-                    foreach (Button letter in keyboardButtons)
-                        letter.Click -= letterGuess_click;
-
+                    textBoxWordGuess.Text = "     WORD PICKER";
                 }
                 catch { }
             }
             else //if user is a guesser
             {
-                try
-                {
-                    textBoxWordGuess.Enabled = true;
-                    textBoxWordGuess.Text = "";
-                    buttonGuessWord.Enabled = true;
-
-                    foreach (Button letter in keyboardButtons)
-                        letter.Click += letterGuess_click;
-                }
-                catch { }
+                textBoxWordGuess.Text = "   NOT YOUR TURN";
             }
+
+            //disables word guessing
+            textBoxWordGuess.Enabled = false;
+            buttonGuessWord.Enabled = false;
+
+            foreach (Button letter in keyboardButtons)//disables letter guessing
+                letter.Click -= letterGuess_click;
+
         }
 
         public void setWordLength(int length) 
@@ -281,7 +273,7 @@ namespace HangmanClient
                 == System.Windows.Forms.DialogResult.Yes)
             {
                 stopwatch.Stop();
-                if (stopwatch.Elapsed.TotalSeconds > 18)//if user waited for more than 18 after start of invitation
+                if (stopwatch.Elapsed.TotalSeconds > 18)//if user waited more than 18 sec after receiving invitation
                 {
                     MessageBox.Show("Invitation timed out");
                     displayPortal();
@@ -296,9 +288,7 @@ namespace HangmanClient
             {
                 stopwatch.Stop();
                 proxy.acceptInvitation(_username, false,id);
-            }
-            
-
+            } 
         }
 
         public void loginConfirmation(bool confirmation)
@@ -315,8 +305,8 @@ namespace HangmanClient
                 displayLogin();
             }
             buttonLogin.Text = "Login";
-            textBoxUserName.Enabled = false;
-            textBoxPassword.Enabled = false;
+            textBoxUserName.Enabled = true;
+            textBoxPassword.Enabled = true;
         }
 
         private void displayLogin()
@@ -373,34 +363,85 @@ namespace HangmanClient
             this.Invalidate();
         }
 
-        private void timer_Tick(object sender, EventArgs evt)
-        {
-            Timer t = (Timer)sender;
-            t.Stop();
-            SendKeys.Send("{ESC}"); // Sends ESC if user takes too long to accept/deny an invitation
-            displayPortal();
-        }
-
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
-            proxy.invitePlayers(new string[0], "none");            
+            try
+            {
+                proxy.leaveGame(this._username, this._gameId);
+                displayPortal();
+            }
+            catch
+            {
+                connectionErrorMessage();
+            }
+        }
+
+        private void connectionErrorMessage()
+        {
+            MessageBox.Show("Could not connect to server.\nIf problem persists, restart application.", "Connection error");
         }
 
         private void letterGuess_click(object sender, EventArgs e) 
         {
+
             Button b = (Button)sender;
-            b.Enabled = false;
-            proxy.guessLetter(b.Text, _username, _gameId);
+            bool sent = false;
+            try
+            {
+                b.Enabled = false;
+                proxy.guessLetter(b.Text, _username, _gameId);
+                sent = true;
+            }
+            catch
+            {
+                sent = false;
+                b.Enabled = true;
+                connectionErrorMessage();
+            }
+            finally
+            {
+                if (sent)
+                {
+                    //disables word guessing
+                    textBoxWordGuess.MaxLength = 20;
+                    textBoxWordGuess.Enabled = false;
+                    buttonGuessWord.Enabled = false;
+
+                    foreach (Button letter in keyboardButtons)//disables letter guessing
+                        letter.Click -= letterGuess_click;
+                }
+            }
         }
         
         private void buttonGuessWord_Click(object sender, EventArgs e)
         {
+
+            bool sent = false;
             try
             {
                 proxy.guessWord(textBoxWordGuess.Text, _username, _gameId);
+                sent = true;
                 textBoxWordGuess.Text = "";
             }
-            catch { }
+            catch
+            {
+                sent = false;
+                connectionErrorMessage();
+            }
+            finally
+            {
+                if (sent)
+                {
+                    //disables word guessing
+                    textBoxWordGuess.MaxLength = 20;
+                    textBoxWordGuess.Text = "   NOT YOUR TURN";
+                    textBoxWordGuess.Enabled = false;
+                    buttonGuessWord.Enabled = false;
+
+                    foreach (Button letter in keyboardButtons)//disables letter guessing
+                        letter.Click -= letterGuess_click;
+                }
+            }
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
@@ -487,28 +528,52 @@ namespace HangmanClient
 
         private void buttonInvite_Click(object sender, EventArgs e)
         {
-            var selectedItems =listView1.SelectedItems;
-            List<string> usernames = new List<string>();
-            foreach (ListViewItem selectedItem in selectedItems)
+            try
             {
-                usernames.Add(selectedItem.Text);
+                var selectedItems =listView1.SelectedItems;
+                List<string> usernames = new List<string>();
+                foreach (ListViewItem selectedItem in selectedItems)
+                {
+                    usernames.Add(selectedItem.Text);
+                }
+                if (usernames.Count != 0)
+                {
+                    proxy.invitePlayers(usernames.ToArray(), _username);
+                    displayWaiting();
+                }
             }
-            if (usernames.Count != 0)
+            catch
             {
-                proxy.invitePlayers(usernames.ToArray(), _username);
-                displayWaiting();
+                connectionErrorMessage();
             }
         }
 
         private void buttonChooseGameWord_Click(object sender, EventArgs e)
         {
-            proxy.chooseGameWord(textBoxChooseGameWord.Text, _username, _gameId);
+            try
+            {
+                proxy.chooseGameWord(textBoxChooseGameWord.Text, _username, _gameId);
+            }
+            catch
+            {
+                connectionErrorMessage();
+            }
         }
 
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            proxy.chat(textBoxSendMessage.Text,_username,_gameId);
-            textBoxSendMessage.Text = "";
+            string temp = "";
+            try
+            {
+                temp = textBoxSendMessage.Text;
+                proxy.chat(textBoxSendMessage.Text, _username, _gameId);
+                textBoxSendMessage.Text = "";
+            }
+            catch
+            {
+                connectionErrorMessage();
+                textBoxSendMessage.Text = temp;//in case fails sending message, puts it back into the text box
+            }
         }
 
     }

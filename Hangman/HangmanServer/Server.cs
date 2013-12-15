@@ -119,8 +119,8 @@ namespace HangmanServer
                     Console.WriteLine("Could not find \""+invitedPlayerNames[i] +"\" in the players list");
                     return;
                 }
-            }            
-            Invitation inv = new Invitation(invitedPlayers, inviter, count, 15000, this);
+            }
+            Invitation inv = new Invitation(invitedPlayers, inviter, count, invitationTimeOut, this);
             _listOfInvitations.Add(inv);
             inviter.Invitation = inv;
             updatePortalList();

@@ -59,6 +59,9 @@ namespace HangmanContract
         void receiveResult(string guess, bool isRight, int[] positions); //receives the result of a guess
 
         [OperationContract(IsOneWay = true)]
+        void startTurn(int time);
+
+        [OperationContract(IsOneWay = true)]
         void endGame(string[] winners, string gameWord);
 
         [OperationContract(IsOneWay = true)]
