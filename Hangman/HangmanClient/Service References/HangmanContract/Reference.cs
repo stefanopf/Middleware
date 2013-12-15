@@ -27,11 +27,11 @@ namespace HangmanClient.HangmanContract {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/logout")]
         System.Threading.Tasks.Task logoutAsync(string username);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/register", ReplyAction="HangmanContract/IHangman/registerResponse")]
-        bool register(string username, string password);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/register")]
+        void register(string username, string password);
         
-        [System.ServiceModel.OperationContractAttribute(Action="HangmanContract/IHangman/register", ReplyAction="HangmanContract/IHangman/registerResponse")]
-        System.Threading.Tasks.Task<bool> registerAsync(string username, string password);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/register")]
+        System.Threading.Tasks.Task registerAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/invitePlayers")]
         void invitePlayers(string[] invitedPlayerNames, string username);
@@ -97,6 +97,9 @@ namespace HangmanClient.HangmanContract {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/receiveResult")]
         void receiveResult(string guess, bool isRight, int[] positions);
         
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/startTurn")]
+        void startTurn(int time);
+        
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/endGame")]
         void endGame(string[] winners, string gameWord);
         
@@ -108,10 +111,13 @@ namespace HangmanClient.HangmanContract {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/loginConfirmation")]
         void loginConfirmation(bool confirmation);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="HangmanContract/IHangman/registrationConfirmation")]
+        void registrationConfirmation(bool confirmation);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IHangmanChannel :HangmanContract.IHangman, System.ServiceModel.IClientChannel {
+    public interface IHangmanChannel : HangmanContract.IHangman, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -154,11 +160,11 @@ namespace HangmanClient.HangmanContract {
             return base.Channel.logoutAsync(username);
         }
         
-        public bool register(string username, string password) {
-            return base.Channel.register(username, password);
+        public void register(string username, string password) {
+            base.Channel.register(username, password);
         }
         
-        public System.Threading.Tasks.Task<bool> registerAsync(string username, string password) {
+        public System.Threading.Tasks.Task registerAsync(string username, string password) {
             return base.Channel.registerAsync(username, password);
         }
         

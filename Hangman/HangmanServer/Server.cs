@@ -83,20 +83,24 @@ namespace HangmanServer
             }
         }
 
-        public bool register(string username, string password)
+        public void register(string username, string password)
         {
             try
             {
+                IHangmanCallBack context = (IHangmanCallBack)OperationContext.Current.GetCallbackChannel<IHangmanCallBack>();
                 if (_listOfPlayers.Find(p => p.Username.ToLower() == username.ToLower()) == null) //if couldnt find player whose name is "username"
                 {
                     _listOfPlayers.Add(new Player(username, password));
-                    return true;
+                    context.registrationConfirmation(true);
                 }
-                return false;
+                else
+                {
+                    context.registrationConfirmation(false);
+                }
             }
             catch
             {
-                return false;
+                Console.WriteLine("Problems trying to register player \"" + username + "\"");
             }
         }
 
@@ -206,16 +210,12 @@ namespace HangmanServer
         {
             try//tries to find a player whose name matches
             {
-                Player player = _listOfPlayers.Find(p => p.Username == username);
-                player.Game = null;
-                player.Invitation = null;
-                player.Context = null;
-                player.IsOnline = false;
-                updatePortalList();
+                Game game = _listOfGames.Find(g => g.Id == id);
+                game.leaveGame(username);
             }
             catch
             {
-                Console.WriteLine("Problems logging out \""+username+"\"");
+                Console.WriteLine("User \""+username+"\" had problems leaving a game");
             }
         }
 

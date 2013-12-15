@@ -309,6 +309,35 @@ namespace HangmanClient
             textBoxPassword.Enabled = true;
         }
 
+        public void registrationConfirmation(bool confirmation)
+        {
+            if (confirmation)
+            {
+                MessageBox.Show("Registration successful!");
+                buttonLogin_Click(null, null);
+            }
+            else
+            {
+                MessageBox.Show("Username already exists");
+            }
+
+            textBoxUserName.Enabled = true;
+            textBoxPassword.Enabled = true;
+            buttonRegister.Text = "Register";
+        }
+
+        public void startTurn(int time) 
+        { 
+            textBoxWordGuess.Text = "";
+           
+            //disables word guessing
+            textBoxWordGuess.Enabled = true;
+            buttonGuessWord.Enabled = true;
+
+            foreach (Button letter in keyboardButtons)//disables letter guessing
+                letter.Click += letterGuess_click;            
+        }
+
         private void displayLogin()
         {
             panelLogin.Location = new Point(0, 0);
@@ -476,14 +505,7 @@ namespace HangmanClient
                 if (textBoxUserName.Text.Length >=3 && textBoxUserName.Text.Length <=20
                     && textBoxPassword.Text.Length >= 5 && textBoxPassword.Text.Length <=20)
                 {
-                    if (proxy.register(textBoxUserName.Text, textBoxPassword.Text))
-                    {
-                        s+="Registration successful!";
-                    }
-                    else 
-                    {
-                        s += "Username already exists";
-                    }
+                    proxy.register(textBoxUserName.Text, textBoxPassword.Text);
                 }
                 else
                 {
@@ -507,15 +529,7 @@ namespace HangmanClient
                 }
                 if(s!="")
                     MessageBox.Show(s, "Registration");
-
-                if (s == "Registration successful!")
-                {
-                    buttonLogin_Click(null, null);
-                }
-
-                textBoxUserName.Enabled = true;
-                textBoxPassword.Enabled = true;
-                buttonRegister.Text = "Register";
+                
             }
             catch 
             {

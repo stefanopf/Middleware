@@ -16,9 +16,6 @@
   <wsdl:message name="IHangman_register_InputMessage">
     <wsdl:part name="parameters" element="tns:register" />
   </wsdl:message>
-  <wsdl:message name="IHangman_register_OutputMessage">
-    <wsdl:part name="parameters" element="tns:registerResponse" />
-  </wsdl:message>
   <wsdl:message name="IHangman_invitePlayers_InputMessage">
     <wsdl:part name="parameters" element="tns:invitePlayers" />
   </wsdl:message>
@@ -55,6 +52,9 @@
   <wsdl:message name="IHangman_receiveResult_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:receiveResult" />
   </wsdl:message>
+  <wsdl:message name="IHangman_startTurn_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:startTurn" />
+  </wsdl:message>
   <wsdl:message name="IHangman_endGame_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:endGame" />
   </wsdl:message>
@@ -67,6 +67,9 @@
   <wsdl:message name="IHangman_loginConfirmation_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:loginConfirmation" />
   </wsdl:message>
+  <wsdl:message name="IHangman_registrationConfirmation_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:registrationConfirmation" />
+  </wsdl:message>
   <wsdl:portType name="IHangman">
     <wsdl:operation name="login">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/login" message="tns:IHangman_login_InputMessage" />
@@ -76,7 +79,6 @@
     </wsdl:operation>
     <wsdl:operation name="register">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/register" message="tns:IHangman_register_InputMessage" />
-      <wsdl:output wsaw:Action="HangmanContract/IHangman/registerResponse" message="tns:IHangman_register_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="invitePlayers">
       <wsdl:input wsaw:Action="HangmanContract/IHangman/invitePlayers" message="tns:IHangman_invitePlayers_InputMessage" />
@@ -114,6 +116,9 @@
     <wsdl:operation name="receiveResult">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/receiveResult" message="tns:IHangman_receiveResult_OutputCallbackMessage" />
     </wsdl:operation>
+    <wsdl:operation name="startTurn">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/startTurn" message="tns:IHangman_startTurn_OutputCallbackMessage" />
+    </wsdl:operation>
     <wsdl:operation name="endGame">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/endGame" message="tns:IHangman_endGame_OutputCallbackMessage" />
     </wsdl:operation>
@@ -125,6 +130,9 @@
     </wsdl:operation>
     <wsdl:operation name="loginConfirmation">
       <wsdl:output wsaw:Action="HangmanContract/IHangman/loginConfirmation" message="tns:IHangman_loginConfirmation_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="registrationConfirmation">
+      <wsdl:output wsaw:Action="HangmanContract/IHangman/registrationConfirmation" message="tns:IHangman_registrationConfirmation_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

@@ -182,6 +182,37 @@ namespace HangmanServer
             
         }
 
+        public void leaveGame(string username)
+        {
+            try//tries to find a player whose name matches
+            {
+                Player player;
+                if(_wordPicker.Username.ToLower() == username.ToLower())
+                {
+                    player=_wordPicker;
+                    _wordPicker = null;
+                }
+                else
+                {
+                    player = _guessers.Find(p => p.Username == username);
+                    _guessers.Remove(player);
+                }
+
+                player.Game = null;
+                player.Invitation = null;
+                _server.updatePortalList();
+                if (_guessers.Count == 0 && _wordPicker == null)//if everybody left
+                {
+                    _server.ListOfGames.Remove(this);
+                }
+            }
+            catch
+            {
+                Console.WriteLine("User \"" + username + "\" had problems leaving a game");
+            }
+        
+        }
+
         private void nextPlayerTurn()
         {
             _guessers[_turn].Context.startTurn(10000);

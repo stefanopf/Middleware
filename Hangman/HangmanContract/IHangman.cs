@@ -16,8 +16,8 @@ namespace HangmanContract
         [OperationContract(IsOneWay = true)]
         void logout(string username);
 
-        [OperationContract]
-        bool register(string username, string password);
+        [OperationContract(IsOneWay = true)]
+        void register(string username, string password);
 
         [OperationContract(IsOneWay = true)]
         void invitePlayers(string[] invitedPlayerNames, string username); //invites players to a game
@@ -72,5 +72,8 @@ namespace HangmanContract
 
         [OperationContract(IsOneWay = true)]
         void loginConfirmation(bool confirmation);
+
+        [OperationContract(IsOneWay = true)]
+        void registrationConfirmation(bool confirmation);
     }
 }
