@@ -65,13 +65,20 @@ namespace HangmanServer
 
                 int idx = this._invitedPlayers.FindIndex(p => p.Username == username);
                 _accepted[idx] = Convert.ToInt32(userAccepted);
+                if (!userAccepted)
+                {
+                    _invitedPlayers[idx].Invitation = null;
+                }
 
                 for (int i=0; i<_invitedPlayers.Count; i++)//check if all players have replied to the invitation
                 {
-                    if (_accepted[i] == -1)
+                    if (_accepted[i] == -1)//if there is a player who hasnt replied yet, finish method
+                    {
                         return;
+                    }
                     else
-                        playersWhoAccepted.Add(_invitedPlayers.ElementAt(i));
+                        if (_accepted[i] == 1)
+                            playersWhoAccepted.Add(_invitedPlayers.ElementAt(i));
                 }
                 _timer.Stop();
                 if (playersWhoAccepted.Count > 0)

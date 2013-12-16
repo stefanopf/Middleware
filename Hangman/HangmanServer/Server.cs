@@ -137,8 +137,7 @@ namespace HangmanServer
             {
                 Invitation inv = _listOfInvitations.Find(i => i.Id == id);
                 inv.acceptInvitation(username,userAccepted);
-                if(userAccepted)
-                    updatePortalList();
+                updatePortalList();
             }
             catch
             {

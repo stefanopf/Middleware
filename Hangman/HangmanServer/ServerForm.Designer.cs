@@ -127,6 +127,7 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.button1);
+            this.MaximizeBox = false;
             this.Name = "ServerForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
