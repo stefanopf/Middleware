@@ -30,6 +30,8 @@ namespace HangmanServer
 
         public Server() 
         {
+            loadDatabase();
+
             if(_listOfPlayers==null)
                 _listOfPlayers = new List<Player>();
         }
@@ -293,5 +295,66 @@ namespace HangmanServer
             }
         }
 
+        public static bool saveDatabaseToFile()
+        {
+            List<string[]> newDataBase = new List<string[]>();
+
+            foreach (Player pl in _listOfPlayers)
+            {
+                string[] str = new string[4];
+                str[0] = pl.Username;
+                str[1] = pl.Password;
+                str[2] = pl.CorrectGuesses.ToString();
+                str[3] = pl.TotalGuesses.ToString();
+                newDataBase.Add(str);
+            }
+
+            try
+            {
+
+                System.IO.FileStream fileStream = new System.IO.FileStream(Properties.Resources.dataBase, System.IO.FileMode.Create);
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<string[]>));
+
+                writer.Serialize(fileStream, newDataBase);
+
+                fileStream.Close();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void loadDatabase()
+        {
+            List<string[]> objectToLoad;
+
+            _listOfPlayers = new List<Player>();
+
+            try
+            {
+                if (System.IO.File.Exists(Properties.Resources.dataBase))
+                {
+                    System.IO.FileStream stream = System.IO.File.Open(Properties.Resources.dataBase, System.IO.FileMode.Open);
+                    System.Xml.Serialization.XmlSerializer reader = new System.Xml.Serialization.XmlSerializer(typeof(List<string[]>));
+                    objectToLoad = (List<string[]>)reader.Deserialize(stream);
+                    stream.Close();
+
+                    foreach (string[] str in objectToLoad)
+                    {
+                        Player pl = new Player(str[0], str[1]);
+
+                        pl.CorrectGuesses = Int32.Parse(str[2]);
+                        pl.TotalGuesses = Int32.Parse(str[3]);
+
+                        _listOfPlayers.Add(pl);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }

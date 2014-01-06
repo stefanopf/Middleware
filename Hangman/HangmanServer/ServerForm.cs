@@ -32,11 +32,14 @@ namespace HangmanServer
                 if (serverIsOn)
                 {
                     labelStatus.Text = "Closing...";
-                    labelStatus.Invalidate();
                     labelPos1.Visible = false;
                     labelPos2.Visible = false;
                     listView1.Visible = false;
-                    Invalidate();
+                    Refresh();
+                    Server.saveDatabaseToFile();
+                    this.Hide();
+                    this.Update();
+                    
                     host.Close();
                 }
             }
@@ -70,19 +73,21 @@ namespace HangmanServer
         {
             if (serverIsOn)
             {
+                labelStatus.Text = "Turning off...";
+                labelStatus.Update();
                 host.Close();
-               // labelMessage.Text = ServerInfo.saveDataBase();
                 labelStatus.Text = "Server is Off";
                 button1.Text = "Turn on Server";
                 listView1.Visible = false;
                 labelPos2.Visible = false;
-                listView1.Invalidate();
+                Server.saveDatabaseToFile();
                 t.Stop();
             }
             else
             {
+                labelStatus.Text = "Turning on...";
+                labelStatus.Update();
                 host = new ServiceHost(typeof(Server));
-                //labelMessage.Text = ServerInfo.LoadDataBase();
                 host.Open();
                 labelStatus.Text = "Server is On";
                 button1.Text = "Turn off Server";
