@@ -480,7 +480,7 @@ namespace HangmanClient
                 buttonLogin.Text = "Logging\r\nin...";
                 textBoxUserName.Enabled = false;
                 textBoxPassword.Enabled = false;
-                Invalidate();
+                Refresh();
                 proxy.login(textBoxUserName.Text, textBoxPassword.Text);
             }
             catch
@@ -499,7 +499,7 @@ namespace HangmanClient
                 buttonRegister.Text = "Registering...";
                 textBoxUserName.Enabled = false;
                 textBoxPassword.Enabled = false;
-                Invalidate();
+                Refresh();
                 string s = "";
 
                 if (textBoxUserName.Text.Length >=3 && textBoxUserName.Text.Length <=20
